@@ -1,0 +1,56 @@
+@model BlogApp.ViewModels.EditProfileViewModel
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow border-0">
+                <div class="card-header bg-primary text-white text-center">
+                    <h3>Edit Profile</h3>
+                </div>
+                <div class="card-body bg-light">
+                    <form asp-controller="Profile" asp-action="Edit" method="post" enctype="multipart/form-data" class="p-3">
+
+                        
+                        <div class="mb-4">
+                            <label asp-for="UserName" class="form-label fw-semibold text-secondary">Username</label>
+                            <input asp-for="UserName" class="form-control" placeholder="Enter your username" />
+                            <span asp-validation-for="UserName" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="Name" class="form-label fw-semibold text-secondary">First Name</label>
+                            <input asp-for="Name" class="form-control" placeholder="Enter your first name" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label asp-for="Surname" class="form-label fw-semibold text-secondary">Last Name</label>
+                            <input asp-for="Surname" class="form-control" placeholder="Enter your last name" />
+                            <span asp-validation-for="Surname" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="ProfileImage" class="form-label fw-semibold text-secondary">Profile Image</label>
+                            <input asp-for="ProfileImage" class="form-control" type="file" />
+                            <span asp-validation-for="ProfileImage" class="text-danger"></span>
+                        </div>
+
+                        @if (!string.IsNullOrEmpty(Model.ProfileImageUrl))
+                        {
+                            <div class="mb-4 text-center">
+                                <label class="form-label fw-semibold text-secondary">Current Image</label>
+                                <div>
+                                    <img src="@Model.ProfileImageUrl" class="img-thumbnail rounded shadow" alt="Current Image" style="max-width: 150px;" />
+                                </div>
+                            </div>
+                        }
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg">Save Changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

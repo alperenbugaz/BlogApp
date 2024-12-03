@@ -1,0 +1,42 @@
+@model BlogApp.ViewModels.LoginViewModel
+
+@{
+    ViewBag.Title = "Login";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-4">
+            <div class="bg-white p-4 rounded shadow-sm">
+                <h1 class="text-center mb-4">Login</h1>
+
+                <!-- Validation Summary -->
+                <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+                <form action="Login" method="post">
+                    <!-- User Name -->
+                    <div class="mb-3">
+                        <label asp-for="UserName" class="form-label">User Name</label>
+                        <input asp-for="UserName" class="form-control" placeholder="Enter your username" />
+                    </div>
+
+                    <!-- Password -->
+                    <div class="mb-3">
+                        <label asp-for="Password" class="form-label">Password</label>
+                        <input asp-for="Password" class="form-control" type="password" placeholder="Enter your password" />
+                    </div>
+
+                    <!-- Login Button -->
+                    <div class="d-flex justify-content-between mb-3">
+                        <button type="submit" class="btn btn-primary w-100">Login</button>
+                    </div>
+                </form>
+
+                <!-- Registration Link -->
+                <div class="text-center mt-3">
+                    <p>Don't have an account? <a href="/Account/Register">Sign up here</a>.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

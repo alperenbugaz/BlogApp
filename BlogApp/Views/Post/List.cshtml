@@ -1,0 +1,76 @@
+@model IEnumerable<BlogApp.Data.Entity.Post>
+
+    <div class="container mt-4">
+        <h2 class="text-primary mb-4">Post List</h2>
+    
+        <a class="btn btn-success mb-3" asp-controller="Post" asp-action="Create">
+            <i class="fas fa-plus-circle"></i> Create New Post
+        </a>
+    
+        <div class="table-responsive">
+            <table class="table table-striped table-hover align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th scope="col">Id</th>
+                        <th scope="col">Title</th>
+                        <th scope="col">Writer</th>
+                        <th scope="col">Description</th>
+                        <th scope="col" class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!Model.Any())
+                    {
+                        <tr>
+                            <td colspan="5" class="text-center text-muted">No posts found.</td>
+                        </tr>
+                    }
+                    else
+                    {
+                        @foreach (var post in Model)
+                        {
+                            <tr>
+                                <td>@post.PostId</td>
+                                <td>@post.Title</td>
+                                <td>@post.Writer?.Name @post.Writer?.Surname</td>
+                                <td>@post.Description</td>
+                                <td class="text-center">
+                                    <a class="btn btn-warning btn-sm" asp-controller="Post" asp-action="Edit" asp-route-id="@post.PostId">
+                                        <i class="fas fa-edit"></i> Edit
+                                    </a>
+                                    <button class="btn btn-danger btn-sm" onclick="confirmDelete('@post.PostId')">
+                                        <i class="fas fa-trash-alt"></i> Delete
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    @section Scripts {
+        <!-- SweetAlert2 -->
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <!-- FontAwesome -->
+        <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+        <script>
+            function confirmDelete(postId) {
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = '/Post/Delete/' + postId;
+                    }
+                })
+            }
+        </script>
+    }
+    

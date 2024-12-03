@@ -1,0 +1,50 @@
+@model BlogAppRole
+
+<form asp-action="Edit" method="post">
+    <div asp-validation-summary="All" class="text-danger"></div>
+    <input type="hidden" asp-for="Id" />
+    <div class="mb-3">
+        <label asp-for="Name" class="form-label"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <input type="submit" value="Edit" class="btn btn-primary" />
+    </div>
+</form>
+
+<h3>Kullanıcılar</h3>
+<table class="table table-sm table-bordered">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>FullName</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @if(ViewBag.Users != null)
+        {
+            if(((IList<BlogAppUser>)ViewBag.Users).Count == 0)
+            {
+                <tr>
+                    <td colspan="4">Veri bulunamadı.</td>
+                </tr>
+            }
+            else
+            {
+                foreach (var user in (IList<BlogAppUser>)ViewBag.Users)
+                {
+                    <tr>
+                        <td>@user.Id</td>
+                        <td>@user.UserName</td>
+                        <td>
+                            <a class="btn btn-primary btn-sm" asp-controller="Users" asp-action="Edit" asp-route-id="@user.Id">Edit</a> 
+                        </td>
+                    </tr>
+                }
+            }
+        }
+    </tbody>
+</table>
