@@ -1,4 +1,11 @@
+@using System.Security.Claims
 @model BlogApp.Data.Entity.Post
+
+@inject BlogApp.Data.Abstract.IFavoriteRepository FavoriteRepository
+@{
+    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+    var isFavorite = FavoriteRepository.GetFavoriteAsync(userId, Model.PostId).Result != null;
+}
 
 <div class="row">
     <div class="col-lg-8">
@@ -7,15 +14,35 @@
             <img src="@Model.ImageUrl" class="img-fluid rounded mb-3" alt="Post Image">
             <ul class="list-inline my-3 text-muted">
                 <li class="list-inline-item"><i class="bi bi-calendar"></i> Created At: @Model.CreatedAt.ToString("d")</li>
-                <li class="list-inline-item"><i class="bi bi-person-circle"></i> <a asp-controller="Profile" asp-action="Index" asp-route-userName="@Model.Writer?.UserName" class="text-decoration-none">@Model.Writer?.Name @Model.Writer?.Surname</a></li>
-
+                <li class="list-inline-item"><i class="bi bi-person-circle"></i> <a asp-controller="Profile" asp-action="Index" asp-route-userName="@Model.Writer?.UserName" class="text-decoration-none">@Model.Writer?.Name @Model.Writer?.Surname</a></li> 
+                <li class="list-inline-item"><i class="bi bi-chat-dots"></i> @Model.Comments?.Count()</li>
+                <li class="list-inline-item"><i class="bi bi-heart"></i> @Model.Favorites?.Count()</li>
             </ul>
             <hr class="my-4">
             <div class="mt-4">
                 @Html.Raw(@Model.Content)
             </div>
             <hr class="my-4">
-
+            <div>
+                @if (isFavorite)
+                {
+                    <form asp-controller="Favorites" asp-action="RemoveFavorite" method="post"> 
+                        <input type="hidden" name="postId" value="@Model.PostId" />
+                        <button type="submit" class="btn btn-outline-danger">
+                            <i class="bi bi-heart-fill"></i> Favorilerden Kaldır
+                        </button>
+                    </form>
+                }
+                else
+                {
+                    <form asp-controller="Favorites" asp-action="AddFavorite" method="post">
+                        <input type="hidden" name="postId" value="@Model.PostId" />
+                        <button type="submit" class="btn btn-outline-primary">
+                            <i class="bi bi-heart"></i> Favorilere Ekle
+                        </button>
+                    </form>
+                }
+            </div>
         </div>
 
         <!-- Comments Section -->
@@ -44,8 +71,9 @@
 
                                 <!-- Comment Content -->
                                 <div>
-                                   <a asp-controller="Profile" asp-action="Index"
-                                   asp-route-userName="@comment.Writer.UserName"> <h5 class="card-title">@comment.Writer.Name @comment.Writer.Surname</h5> </a>
+                                    <a asp-controller="Profile" asp-action="Index" asp-route-userName="@comment.Writer.UserName">
+                                        <h5 class="card-title">@comment.Writer.Name @comment.Writer.Surname</h5>
+                                    </a>
                                     <p class="card-text">@comment.CommentText</p>
                                     <p class="card-text"><small class="text-muted">@comment.CreatedAt.ToString("d")</small></p>
                                 </div>

@@ -1,3 +1,4 @@
+using BlogApp.Data.Concrete;
 using BlogApp.Data.Entity;
 
 namespace BlogApp.ViewModels
@@ -16,5 +17,9 @@ namespace BlogApp.ViewModels
         public string? ProfileImageUrl { get; set; }
 
         public List<Comment>?  Comments { get; set; }
+
+        public List<Favorite>? Favorites { get; set; }
+
+        public List<BlogAppUser>? PostWriter { get; set; }
     }
 }

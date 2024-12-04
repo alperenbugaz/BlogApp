@@ -37,7 +37,7 @@ public class AccountController:Controller
 
                 if(result.Succeeded)
                 {
-                    return RedirectToAction("Index","Home");
+                    return RedirectToAction("Index","Post");
                 }
             }
 
@@ -87,7 +87,12 @@ public class AccountController:Controller
     public async Task<IActionResult> Logout()
     {
         await _signInManager.SignOutAsync();
-        return RedirectToAction("Index","Home");
+        return RedirectToAction("Index","Post");
+    }   
+
+    public IActionResult AccessDenied()
+    {
+        return View();
     }
 
 }

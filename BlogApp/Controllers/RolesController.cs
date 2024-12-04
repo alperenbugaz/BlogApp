@@ -1,11 +1,14 @@
 using BlogApp.Data.Concrete;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace BlogApp.Controllers;
+
+[Authorize (Roles = "Admin")]
 public class RolesController:Controller
-{
+{   
     private readonly RoleManager<BlogAppRole> _roleManager;
     private readonly UserManager<BlogAppUser> _userManager;
 

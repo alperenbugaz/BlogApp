@@ -21,6 +21,8 @@ namespace BlogApp.Data.Entity
 
         public bool IsPublished { get; set; }
 
+        public List<Favorite>? Favorites { get; set; }
+
         
     }
 }

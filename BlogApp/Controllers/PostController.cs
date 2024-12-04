@@ -25,6 +25,7 @@ public class PostController : Controller
     }
 
 
+    [Authorize (Roles = "Admin")]
     public async Task<IActionResult> List()
     {
         var posts = await _postRepository.GetAllPosts().Where(p => p.IsPublished)
@@ -37,7 +38,7 @@ public class PostController : Controller
     public async Task<IActionResult> Details(int id)
     {
         var post = await _postRepository.GetAllPosts()
-            .Include(p => p.Writer).Include(p => p.Comments).ThenInclude(c => c.Writer)
+            .Include(p => p.Writer).Include(p => p.Comments).ThenInclude(c => c.Writer).Include(p => p.Favorites)
             .FirstOrDefaultAsync(p => p.PostId == id);
 
         if (post == null)
@@ -61,11 +62,13 @@ public class PostController : Controller
         return View(model);
     }
 
+    [Authorize]
     public IActionResult Create()
     {
         return View();
     }
 
+    [Authorize]
     [HttpPost]
     public async Task<IActionResult> Create(PostViewModel model)
     {
@@ -130,40 +133,50 @@ public class PostController : Controller
         return View(model);
     }
 
-    [Authorize]
-    [HttpPost]
-    public async Task<IActionResult> Edit(PostViewModel model)
-    {
-        if (ModelState.IsValid)
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> Edit(PostViewModel model)
         {
-            var post = await _postRepository.GetPostById(model.Id);
-            if (post == null)
+            if (ModelState.IsValid)
             {
-                return NotFound();
+                var post = await _postRepository.GetPostById(model.Id);
+                if (post == null)
+                {
+                    return NotFound();
+                }
+
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var user = await _userManager.FindByIdAsync(userId);
+
+                if (user == null || (post.WriterId != userId && !await _userManager.IsInRoleAsync(user, "Admin")))
+                {
+                    return Forbid();
+                }
+
+                post.Title = model.Title;
+                post.Description = model.Description;
+                post.Content = model.Content;
+
+                if (model.Image != null)
+                {
+                    var fileName = Path.GetRandomFileName() + Path.GetExtension(model.Image.FileName);
+                    var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", fileName);
+                    using (var stream = new FileStream(path, FileMode.Create))
+                    {
+                        await model.Image.CopyToAsync(stream);
+                    }
+                    post.ImageUrl = "/images/" + fileName;
+                }
+
+                _postRepository.UpdatePost(post);
+
+                return RedirectToAction("Details", new { id = post.PostId });
             }
 
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var user = await _userManager.FindByIdAsync(userId);
-
-            if (user == null || (post.WriterId != userId && !await _userManager.IsInRoleAsync(user, "Admin")))
-            {
-                return Forbid();
-            }
-
-            post.Title = model.Title;
-            post.Description = model.Description;
-            post.Content = model.Content;
-            post.ImageUrl = model.ImageUrl;
-
-            _postRepository.UpdatePost(post);
-
-            return RedirectToAction("Details", new { id = post.PostId });
+            return View(model);
         }
 
-        return View(model);
-    }
-
-
+    [Authorize]
     [HttpGet]
     public async Task<IActionResult> Delete(int id)
     {

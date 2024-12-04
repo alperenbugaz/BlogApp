@@ -1,0 +1,37 @@
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<BlogApp.Data.Concrete.BlogAppUser> UserManager
+@inject SignInManager<BlogApp.Data.Concrete.BlogAppUser> SignInManager
+
+@{
+    var user = await UserManager.GetUserAsync(User);
+    var roles = user != null ? await UserManager.GetRolesAsync(user) : new List<string>();
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Access Denied</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="alert alert-danger" role="alert">
+            <h4 class="alert-heading">Yetkiniz yok</h4>
+            <p>Bu sayfaya erişim yetkiniz yok.</p>
+            @if (roles.Any())
+            {
+                <p>Mevcut rolünüz: @string.Join(", ", roles)</p>
+            }
+            else
+            {
+                <p>Mevcut rolünüz: Yok</p>
+            }
+            <hr>
+            <a href="/Post" class="btn btn-primary">Ana Sayfaya Dön</a>
+        </div>
+    </div>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

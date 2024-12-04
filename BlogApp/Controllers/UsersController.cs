@@ -1,11 +1,12 @@
 using BlogApp.Data.Concrete;
 using BlogApp.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace BlogApp.Controllers
-{
+{   [Authorize(Roles = "Admin")]
     public class UsersController : Controller
     {
         private readonly UserManager<BlogAppUser> _userManager;
@@ -28,6 +29,7 @@ namespace BlogApp.Controllers
             return View();
         }
 
+        [Authorize  (Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> Create(CreateUserViewModel model)
         {
@@ -57,6 +59,7 @@ namespace BlogApp.Controllers
             return View(model);
         }
 
+        [Authorize (Roles = "Admin")]
         [HttpGet]
         public async Task<IActionResult> Edit(string id)
         {

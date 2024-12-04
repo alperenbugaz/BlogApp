@@ -1,11 +1,35 @@
 @model BlogApp.ViewModels.PostViewModel
 
+
+@{
+    ViewData["Title"] = "Posts";
+}
+@if (User.Identity.IsAuthenticated)
+{
+    <div class="mb-3">
+        <a asp-controller="Post" asp-action="Create" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i> Yeni Blog Yayınla
+        </a>
+    </div>
+}
+else
+{
+    <div class="alert alert-warning" role="alert">
+        Blog yayınlamak için <a href="/Account/Login" class="alert-link">giriş yapın</a> veya <a href="/Account/Register" class="alert-link">kayıt olun</a>.
+    </div>
+}
+
+
+
 <div class="container mt-4">
+
+    
     <div class="row">
         <!-- Ana Postlar -->
         <div class="col-lg-8">
+            <h1 class="h4 mb-4 text-primary fw-bold">Posts</h1>
             <div class="bg-white p-4 rounded shadow-sm">
-                <h1 class="h4 mb-4 text-primary fw-bold">Popular Posts</h1>
+                
                 @foreach (var post in Model.Posts)
                 {
                     <div class="card border-0 mb-4">
@@ -32,25 +56,6 @@
                     </div>
                     <hr class="my-4">
                 }
-
-                <!-- Sayfalama -->
-                <nav aria-label="Page navigation">
-                    <ul class="pagination justify-content-center">
-                        <li class="page-item">
-                            <a class="page-link" href="#" aria-label="Previous">
-                                <span aria-hidden="true">&laquo;</span>
-                            </a>
-                        </li>
-                        <li class="page-item"><a class="page-link" href="#">1</a></li>
-                        <li class="page-item"><a class="page-link" href="#">2</a></li>
-                        <li class="page-item"><a class="page-link" href="#">3</a></li>
-                        <li class="page-item">
-                            <a class="page-link" href="#" aria-label="Next">
-                                <span aria-hidden="true">&raquo;</span>
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
             </div>
         </div>
 

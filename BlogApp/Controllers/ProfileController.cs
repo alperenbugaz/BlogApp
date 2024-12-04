@@ -26,24 +26,31 @@ namespace BlogApp.Controllers
         }
 
         public async Task<IActionResult> Index(string userName)
-        {
+        {   
             var user = await _userManager.Users
-                .Include(u => u.Posts).Include(u => u.Comments).ThenInclude(c => c.Post)
+                .Include(u => u.Posts)
+                .Include(u => u.Comments)
+                    .ThenInclude(c => c.Post)
+                .Include(u=>u.Favorites)
+                    .ThenInclude(f=>f.Post)
+                        .ThenInclude(p=>p.Writer)
                 .FirstOrDefaultAsync(u => u.UserName == userName);
 
             if (user == null)
             {
                 return NotFound();
             }
-
+            var publishedPosts = user.Posts?.Where(p => p.IsPublished).ToList();
             var model = new UserProfileViewModel
             {
                 UserName = user.UserName,
                 Name = user.Name,
                 Surname = user.Surname,
                 ProfileImageUrl = user.ProfileImageUrl,
-                Posts = user.Posts,
-                Comments = user.Comments.ToList() 
+                Posts = publishedPosts,
+                Comments = user.Comments.ToList() ,
+                Favorites = user.Favorites.ToList(),
+                PostWriter = user.Posts.Select(p => p.Writer).ToList()
 
             };
 

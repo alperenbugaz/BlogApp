@@ -19,10 +19,10 @@
         <span asp-validation-for="Description" class="text-danger"></span>
     </div>
 
-    <!-- Content Field with TinyMCE Editor -->
+    <!-- Content Field with CKEditor -->
     <div class="mb-3">
         <label asp-for="Content" class="form-label">Content</label>
-        <textarea asp-for="Content" class="form-control" placeholder="Write the content of the post"></textarea>
+        <textarea asp-for="Content" class="form-control" id="editor" placeholder="Write the content of the post"></textarea>
         <span asp-validation-for="Content" class="text-danger"></span>
     </div>
 
@@ -40,24 +40,13 @@
 </form>
 
 @section Scripts {
-    <!-- TinyMCE Script -->
-    <script src="https://cdn.tiny.cloud/1/jsdva02stqiqet62bc9v0a63gu6q34irn58jn8ap01llcrx1/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
+    <!-- CKEditor Script -->
+    <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
     <script>
-        tinymce.init({
-            selector: 'textarea',
-            plugins: [
-                'anchor', 'autolink', 'charmap', 'codesample', 'emoticons', 'image', 'link', 'lists', 'media', 'searchreplace', 'table', 'visualblocks', 'wordcount',
-                'checklist', 'mediaembed', 'casechange', 'export', 'formatpainter', 'pageembed', 'a11ychecker', 'tinymcespellchecker', 'permanentpen', 'powerpaste', 'advtable', 'advcode', 'editimage', 'advtemplate', 'ai', 'mentions', 'tinycomments', 'tableofcontents', 'footnotes', 'mergetags', 'autocorrect', 'typography', 'inlinecss', 'markdown',
-                'importword', 'exportword', 'exportpdf'
-            ],
-            toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
-            tinycomments_mode: 'embedded',
-            tinycomments_author: 'Author name',
-            mergetags_list: [
-                { value: 'First.Name', title: 'First Name' },
-                { value: 'Email', title: 'Email' }
-            ],
-            ai_request: (request, respondWith) => respondWith.string(() => Promise.reject('See docs to implement AI Assistant'))
-        });
+        ClassicEditor
+            .create(document.querySelector('#editor'))
+            .catch(error => {
+                console.error(error);
+            });
     </script>
 }

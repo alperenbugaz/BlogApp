@@ -14,6 +14,7 @@ builder.Services.AddDbContext<BlogAppContext>(options =>
     new MySqlServerVersion(new Version(8, 0, 21))));
 builder.Services.AddScoped<IPostRepository,EfPostRepository>();
 builder.Services.AddScoped<ICommentRepository,EfCommentRepository>();
+builder.Services.AddScoped<IFavoriteRepository,EfFavoriteRepository>();
 builder.Services.AddIdentity<BlogAppUser, BlogAppRole>()
     .AddEntityFrameworkStores<BlogAppContext>().AddDefaultTokenProviders();
 builder.Services.Configure<IdentityOptions>(options =>
@@ -54,6 +55,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+
 app.UseAuthentication();
 app.UseAuthorization();
 
@@ -64,7 +66,7 @@ app.MapControllerRoute(
     
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Post}/{action=Index}/{id?}");
 
 
 

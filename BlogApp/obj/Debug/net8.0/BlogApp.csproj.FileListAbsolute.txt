@@ -104,3 +104,4 @@ E:\github\BlogApp\BlogApp\bin\Debug\net8.0\tr\Microsoft.CodeAnalysis.Workspaces.
 E:\github\BlogApp\BlogApp\bin\Debug\net8.0\zh-Hans\Microsoft.CodeAnalysis.Workspaces.resources.dll
 E:\github\BlogApp\BlogApp\bin\Debug\net8.0\zh-Hant\Microsoft.CodeAnalysis.Workspaces.resources.dll
 E:\github\BlogApp\BlogApp\bin\Debug\net8.0\libman.json
+E:\github\BlogApp\BlogApp\obj\Debug\net8.0\BlogApp.sourcelink.json

@@ -15,6 +15,8 @@ namespace BlogApp.Data.Concrete
 
         public List<Comment>? Comments { get; set; }
 
+        public List<Favorite>? Favorites { get; set; }
+
         
     }
 

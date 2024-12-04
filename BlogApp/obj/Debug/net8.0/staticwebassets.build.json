@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "ozEBJ3nqK+pmNxIPCiU4XLiKQxO4J/OUGglf8hqdfJQ=",
+  "Hash": "XsIG1VLDzPkJTwciWW1u+NqJVdg1wC4S3ZDb6iy8w8s=",
   "Source": "BlogApp",
   "BasePath": "_content/BlogApp",
   "Mode": "Default",
@@ -93,6 +93,25 @@
       "OriginalItemSpec": "wwwroot\\favicon.ico"
     },
     {
+      "Identity": "E:\\github\\BlogApp\\BlogApp\\wwwroot\\images\\1b4s3zuk.30i.png",
+      "SourceId": "BlogApp",
+      "SourceType": "Discovered",
+      "ContentRoot": "E:\\github\\BlogApp\\BlogApp\\wwwroot\\",
+      "BasePath": "_content/BlogApp",
+      "RelativePath": "images/1b4s3zuk.30i.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\1b4s3zuk.30i.png"
+    },
+    {
       "Identity": "E:\\github\\BlogApp\\BlogApp\\wwwroot\\images\\1wxunggu.cbc.jpeg",
       "SourceId": "BlogApp",
       "SourceType": "Discovered",
@@ -110,25 +129,6 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\images\\1wxunggu.cbc.jpeg"
-    },
-    {
-      "Identity": "E:\\github\\BlogApp\\BlogApp\\wwwroot\\images\\2311b651-3802-472c-84c1-4e9b60ba735d.jpeg",
-      "SourceId": "BlogApp",
-      "SourceType": "Discovered",
-      "ContentRoot": "E:\\github\\BlogApp\\BlogApp\\wwwroot\\",
-      "BasePath": "_content/BlogApp",
-      "RelativePath": "images/2311b651-3802-472c-84c1-4e9b60ba735d.jpeg",
-      "AssetKind": "All",
-      "AssetMode": "All",
-      "AssetRole": "Primary",
-      "AssetMergeBehavior": "PreferTarget",
-      "AssetMergeSource": "",
-      "RelatedAsset": "",
-      "AssetTraitName": "",
-      "AssetTraitValue": "",
-      "CopyToOutputDirectory": "Never",
-      "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\images\\2311b651-3802-472c-84c1-4e9b60ba735d.jpeg"
     },
     {
       "Identity": "E:\\github\\BlogApp\\BlogApp\\wwwroot\\images\\4gevgcra.jvn.jpeg",
