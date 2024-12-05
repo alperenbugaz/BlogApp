@@ -62,11 +62,9 @@ else
         <!-- Yan Menü -->
         <div class="col-lg-4">
             <div class="bg-white p-4 rounded shadow-sm mb-4">
-                <vc:tags-menu></vc:tags-menu>
+                @await Component.InvokeAsync("NewPosts")
             </div>
-            <div class="bg-white p-4 rounded shadow-sm">
-                <vc:new-posts></vc:new-posts>
-            </div>
+
         </div>
     </div>
 </div>

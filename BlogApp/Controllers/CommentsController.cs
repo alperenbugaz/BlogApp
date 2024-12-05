@@ -17,7 +17,14 @@ public class CommentsController : Controller
     [HttpPost]
     public IActionResult Create(int postId, string CommentText)
     {
+
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (userId == null)
+        {
+            return RedirectToAction("Login", "Account");
+        }
+
         Comment comment = new Comment
         {
             PostId = postId,
@@ -29,7 +36,7 @@ public class CommentsController : Controller
         _commentRepository.AddComment(comment);
         return RedirectToAction("Details", "Post", new { id = postId });
 
-    }   
+    }
 
     [HttpGet]
     public IActionResult Delete(int id)

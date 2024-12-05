@@ -9,5 +9,7 @@ namespace BlogApp.Data.Abstract
         void AddPost(Post post);
         void UpdatePost(Post post);
         void DeletePost(int id);
+
+        Task<IEnumerable<Post>> GetRecentPostsAsync();
     }
 }

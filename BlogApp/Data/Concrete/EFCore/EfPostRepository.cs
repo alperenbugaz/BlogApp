@@ -35,6 +35,14 @@ namespace BlogApp.Data.Abstract
             return _context.Posts.Include(p => p.Writer);
         }
 
+        public async Task<IEnumerable<Post>> GetRecentPostsAsync()
+        {
+            return await _context.Posts
+                .Where(p => p.IsPublished)
+                .OrderByDescending(p => p.CreatedAt)
+                .Take(5)
+                .ToListAsync();
+        }
 
         public async Task<Post> GetPostById(int id)
         {   
