@@ -16,6 +16,8 @@ namespace IdentityApp.Data.Concrete.EFCore
         public DbSet<Comment> Comments { get; set; }
 
         public DbSet<Favorite> Favorites { get; set; }
+
+        public DbSet<Subscription> Subscriptions { get; set; }
           protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -46,6 +48,19 @@ namespace IdentityApp.Data.Concrete.EFCore
                 .HasOne(f => f.Post)
                 .WithMany(p => p.Favorites)
                 .HasForeignKey(f => f.PostId);
+
+            // Subscription - Subscriber
+                        modelBuilder.Entity<Subscription>()
+                .HasOne(s => s.Subscriber)
+                .WithMany(u => u.Subscriptions)
+                .HasForeignKey(s => s.SubscriberId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Subscription>()
+                .HasOne(s => s.SubscribedTo)
+                .WithMany(u => u.Subscribers)
+                .HasForeignKey(s => s.SubscribedToId)
+                .OnDelete(DeleteBehavior.Restrict);
 
         }
         

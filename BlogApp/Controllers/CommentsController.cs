@@ -25,6 +25,11 @@ public class CommentsController : Controller
             return RedirectToAction("Login", "Account");
         }
 
+        if (string.IsNullOrEmpty(CommentText))
+        {
+            return RedirectToAction("Details", "Post", new { id = postId });
+        }
+
         Comment comment = new Comment
         {
             PostId = postId,

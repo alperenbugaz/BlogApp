@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BlogApp.Migrations
 {
     [DbContext(typeof(BlogAppContext))]
-    [Migration("20241203175346_AddFavoriTable")]
-    partial class AddFavoriTable
+    [Migration("20241212133442_MigUp")]
+    partial class MigUp
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -177,7 +177,7 @@ namespace BlogApp.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Favorite");
+                    b.ToTable("Favorites");
                 });
 
             modelBuilder.Entity("BlogApp.Data.Entity.Post", b =>

@@ -1,5 +1,7 @@
 using BlogApp.Data.Abstract;
 using BlogApp.Data.Concrete;
+using BlogApp.Data.Concrete.EFCore;
+using BlogApp.SeedData;
 using IdentityApp.Data.Concrete.EFCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -15,6 +17,7 @@ builder.Services.AddDbContext<BlogAppContext>(options =>
 builder.Services.AddScoped<IPostRepository,EfPostRepository>();
 builder.Services.AddScoped<ICommentRepository,EfCommentRepository>();
 builder.Services.AddScoped<IFavoriteRepository,EfFavoriteRepository>();
+builder.Services.AddScoped<ISubscriptionRepository,EfSubscriptionRepository>();
 builder.Services.AddIdentity<BlogAppUser, BlogAppRole>()
     .AddEntityFrameworkStores<BlogAppContext>().AddDefaultTokenProviders();
 builder.Services.Configure<IdentityOptions>(options =>
@@ -69,5 +72,7 @@ app.MapControllerRoute(
     pattern: "{controller=Post}/{action=Index}/{id?}");
 
 
+
+BlogAppSeedData.IdentityTestUser(app);
 
 app.Run();

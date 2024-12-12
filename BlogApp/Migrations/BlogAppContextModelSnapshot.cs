@@ -219,6 +219,30 @@ namespace BlogApp.Migrations
                     b.ToTable("Posts");
                 });
 
+            modelBuilder.Entity("BlogApp.Data.Entity.Subscription", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("SubscribedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("SubscribedToId")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("SubscriberId")
+                        .HasColumnType("varchar(255)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SubscribedToId");
+
+                    b.HasIndex("SubscriberId");
+
+                    b.ToTable("Subscriptions");
+                });
+
             modelBuilder.Entity("BlogApp.Data.Entity.Tag", b =>
                 {
                     b.Property<int>("TagId")
@@ -390,6 +414,23 @@ namespace BlogApp.Migrations
                     b.Navigation("Writer");
                 });
 
+            modelBuilder.Entity("BlogApp.Data.Entity.Subscription", b =>
+                {
+                    b.HasOne("BlogApp.Data.Concrete.BlogAppUser", "SubscribedTo")
+                        .WithMany("Subscribers")
+                        .HasForeignKey("SubscribedToId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("BlogApp.Data.Concrete.BlogAppUser", "Subscriber")
+                        .WithMany("Subscriptions")
+                        .HasForeignKey("SubscriberId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("SubscribedTo");
+
+                    b.Navigation("Subscriber");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("BlogApp.Data.Concrete.BlogAppRole", null)
@@ -448,6 +489,10 @@ namespace BlogApp.Migrations
                     b.Navigation("Favorites");
 
                     b.Navigation("Posts");
+
+                    b.Navigation("Subscribers");
+
+                    b.Navigation("Subscriptions");
                 });
 
             modelBuilder.Entity("BlogApp.Data.Entity.Post", b =>

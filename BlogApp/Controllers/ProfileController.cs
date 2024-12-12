@@ -26,21 +26,29 @@ namespace BlogApp.Controllers
         }
 
         public async Task<IActionResult> Index(string userName)
-        {   
+        {
             var user = await _userManager.Users
                 .Include(u => u.Posts)
+                    .ThenInclude(p => p.Comments)
+                .Include(u => u.Posts)
+                    .ThenInclude(p => p.Favorites)
                 .Include(u => u.Comments)
                     .ThenInclude(c => c.Post)
-                .Include(u=>u.Favorites)
-                    .ThenInclude(f=>f.Post)
-                        .ThenInclude(p=>p.Writer)
+                .Include(u => u.Favorites)
+                    .ThenInclude(f => f.Post)
+                    .ThenInclude(p => p.Writer)
+                 .Include(u => u.Subscribers)
+                .Include(u => u.Subscriptions)
                 .FirstOrDefaultAsync(u => u.UserName == userName);
 
             if (user == null)
             {
                 return NotFound();
             }
-            var publishedPosts = user.Posts?.Where(p => p.IsPublished).ToList();
+            var currentUserId = _userManager.GetUserId(User);
+            var isSubscribed = user.Subscribers.Any(s => s.SubscriberId == currentUserId);
+
+            var publishedPosts = user.Posts?.Where(p => p.IsPublished).ToList() ?? new List<Post>();
             var model = new UserProfileViewModel
             {
                 UserName = user.UserName,
@@ -48,15 +56,17 @@ namespace BlogApp.Controllers
                 Surname = user.Surname,
                 ProfileImageUrl = user.ProfileImageUrl,
                 Posts = publishedPosts,
-                Comments = user.Comments.ToList() ,
-                Favorites = user.Favorites.ToList(),
-                PostWriter = user.Posts.Select(p => p.Writer).ToList()
+                Comments = user.Comments?.ToList() ?? new List<Comment>(),
+                Favorites = user.Favorites?.ToList() ?? new List<Favorite>(),
+                PostWriter = user.Posts?.Select(p => p.Writer).ToList() ?? new List<BlogAppUser>(),
+                SubscribersCount = user.Subscribers.Count,
+                IsSubscribed = isSubscribed
+
 
             };
 
             return View(model);
         }
-
 
         [HttpGet("edit")]
         public async Task<IActionResult> Edit()

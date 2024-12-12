@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BlogApp.Migrations
 {
     [DbContext(typeof(BlogAppContext))]
-    [Migration("20241201205404_AddWriterIdToPost")]
-    partial class AddWriterIdToPost
+    [Migration("20241212215249_AddSubscriptions")]
+    partial class AddSubscriptions
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -123,14 +123,11 @@ namespace BlogApp.Migrations
 
             modelBuilder.Entity("BlogApp.Data.Entity.Comment", b =>
                 {
-                    b.Property<int>("id")
+                    b.Property<int>("CommentId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int?>("Commentid")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Content")
+                    b.Property<string>("CommentText")
                         .HasColumnType("longtext");
 
                     b.Property<DateTime>("CreatedAt")
@@ -142,12 +139,11 @@ namespace BlogApp.Migrations
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<int>("WriterId")
-                        .HasColumnType("int");
+                    b.Property<string>("WriterId")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
 
-                    b.HasKey("id");
-
-                    b.HasIndex("Commentid");
+                    b.HasKey("CommentId");
 
                     b.HasIndex("PostId");
 
@@ -156,13 +152,10 @@ namespace BlogApp.Migrations
                     b.ToTable("Comments");
                 });
 
-            modelBuilder.Entity("BlogApp.Data.Entity.Like", b =>
+            modelBuilder.Entity("BlogApp.Data.Entity.Favorite", b =>
                 {
-                    b.Property<int>("id")
+                    b.Property<int>("FavoriteId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<int?>("Commentid")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedAt")
@@ -171,18 +164,20 @@ namespace BlogApp.Migrations
                     b.Property<int>("PostId")
                         .HasColumnType("int");
 
-                    b.Property<int>("WriterId")
-                        .HasColumnType("int");
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime(6)");
 
-                    b.HasKey("id");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
 
-                    b.HasIndex("Commentid");
+                    b.HasKey("FavoriteId");
 
                     b.HasIndex("PostId");
 
-                    b.HasIndex("WriterId");
+                    b.HasIndex("UserId");
 
-                    b.ToTable("Likes");
+                    b.ToTable("Favorites");
                 });
 
             modelBuilder.Entity("BlogApp.Data.Entity.Post", b =>
@@ -227,6 +222,30 @@ namespace BlogApp.Migrations
                     b.ToTable("Posts");
                 });
 
+            modelBuilder.Entity("BlogApp.Data.Entity.Subscription", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("SubscribedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("SubscribedToId")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("SubscriberId")
+                        .HasColumnType("varchar(255)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SubscribedToId");
+
+                    b.HasIndex("SubscriberId");
+
+                    b.ToTable("Subscriptions");
+                });
+
             modelBuilder.Entity("BlogApp.Data.Entity.Tag", b =>
                 {
                     b.Property<int>("TagId")
@@ -242,26 +261,6 @@ namespace BlogApp.Migrations
                     b.HasKey("TagId");
 
                     b.ToTable("Tags");
-                });
-
-            modelBuilder.Entity("BlogApp.Data.Entity.Writer", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Surname")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("WriterUserName")
-                        .HasColumnType("longtext");
-
-                    b.HasKey("id");
-
-                    b.ToTable("Writers");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -368,18 +367,14 @@ namespace BlogApp.Migrations
 
             modelBuilder.Entity("BlogApp.Data.Entity.Comment", b =>
                 {
-                    b.HasOne("BlogApp.Data.Entity.Comment", null)
-                        .WithMany("Comments")
-                        .HasForeignKey("Commentid");
-
                     b.HasOne("BlogApp.Data.Entity.Post", "Post")
                         .WithMany("Comments")
                         .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BlogApp.Data.Entity.Writer", "Writer")
-                        .WithMany()
+                    b.HasOne("BlogApp.Data.Concrete.BlogAppUser", "Writer")
+                        .WithMany("Comments")
                         .HasForeignKey("WriterId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -389,27 +384,23 @@ namespace BlogApp.Migrations
                     b.Navigation("Writer");
                 });
 
-            modelBuilder.Entity("BlogApp.Data.Entity.Like", b =>
+            modelBuilder.Entity("BlogApp.Data.Entity.Favorite", b =>
                 {
-                    b.HasOne("BlogApp.Data.Entity.Comment", null)
-                        .WithMany("Likes")
-                        .HasForeignKey("Commentid");
-
                     b.HasOne("BlogApp.Data.Entity.Post", "Post")
-                        .WithMany()
+                        .WithMany("Favorites")
                         .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BlogApp.Data.Entity.Writer", "Writer")
-                        .WithMany()
-                        .HasForeignKey("WriterId")
+                    b.HasOne("BlogApp.Data.Concrete.BlogAppUser", "User")
+                        .WithMany("Favorites")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Post");
 
-                    b.Navigation("Writer");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("BlogApp.Data.Entity.Post", b =>
@@ -419,11 +410,28 @@ namespace BlogApp.Migrations
                         .HasForeignKey("TagId");
 
                     b.HasOne("BlogApp.Data.Concrete.BlogAppUser", "Writer")
-                        .WithMany()
+                        .WithMany("Posts")
                         .HasForeignKey("WriterId")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Writer");
+                });
+
+            modelBuilder.Entity("BlogApp.Data.Entity.Subscription", b =>
+                {
+                    b.HasOne("BlogApp.Data.Concrete.BlogAppUser", "SubscribedTo")
+                        .WithMany("Subscribers")
+                        .HasForeignKey("SubscribedToId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("BlogApp.Data.Concrete.BlogAppUser", "Subscriber")
+                        .WithMany("Subscriptions")
+                        .HasForeignKey("SubscriberId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("SubscribedTo");
+
+                    b.Navigation("Subscriber");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -477,16 +485,24 @@ namespace BlogApp.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("BlogApp.Data.Entity.Comment", b =>
+            modelBuilder.Entity("BlogApp.Data.Concrete.BlogAppUser", b =>
                 {
                     b.Navigation("Comments");
 
-                    b.Navigation("Likes");
+                    b.Navigation("Favorites");
+
+                    b.Navigation("Posts");
+
+                    b.Navigation("Subscribers");
+
+                    b.Navigation("Subscriptions");
                 });
 
             modelBuilder.Entity("BlogApp.Data.Entity.Post", b =>
                 {
                     b.Navigation("Comments");
+
+                    b.Navigation("Favorites");
                 });
 
             modelBuilder.Entity("BlogApp.Data.Entity.Tag", b =>

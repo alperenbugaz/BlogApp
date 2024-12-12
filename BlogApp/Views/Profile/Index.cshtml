@@ -24,7 +24,25 @@
                         </div>
                         <h4 class="fw-bold text-dark mb-1">@Model.Name @Model.Surname</h4>
                         <p class="text-muted">@Model.UserName</p>
-
+                        <p class="text-muted">@Model.SubscribersCount subscribers</p>
+                        @if (User.Identity.Name != Model.UserName)
+                        {
+                            @if (Model.IsSubscribed)
+                            {
+                                <form asp-controller="Subscription" asp-action="Unsubscribe" method="post">
+                                    <input type="hidden" name="username" value="@Model.UserName" />
+                                    <button type="submit" class="btn btn-outline-danger">Abone Olundu</button>
+                                </form>
+                            }
+                            else
+                            {
+                                <form asp-controller="Subscription" asp-action="Subscribe" method="post">
+                                    <input type="hidden" name="username" value="@Model.UserName" />
+                                    <h1>@Model.UserName</h1>
+                                    <button type="submit" class="btn btn-outline-primary">Abone Ol</button>
+                                </form>
+                            }
+                        }
                     </div>
                 </div>
             </div>
@@ -47,6 +65,10 @@
                                             <div>
                                                 <h5 class="fw-bold text-primary mb-1">@post.Title</h5>
                                                 <p class="text-muted small mb-0">@post.Description</p>
+                                                <p class="text-muted small mb-0">
+                                                    <i class="bi bi-chat-dots"></i> @post.Comments.Count() comments
+                                                    <i class="bi bi-heart ms-3"></i> @post.Favorites.Count() favorites
+                                                </p>
                                             </div>
                                             <div>
                                                 <a href="/Post/Details/@post.PostId" class="btn btn-outline-primary btn-sm rounded-pill">
