@@ -7,41 +7,43 @@
             <div class="col-lg-4">
                 <div class="card border-0 shadow-sm rounded-lg">
                     <div class="card-body text-center p-4">
-                        <div class="profile-image-container position-relative mx-auto mb-3" style="width: 150px; height: 150px;">
-                            <img src="@Model.ProfileImageUrl"
-                                 class="rounded-circle border img-fluid"
-                                 style="width: 100%; height: 100%; object-fit: cover;"
-                                 alt="@Model.Name Profile Picture" />
+                        <div class="profile-image-container position-relative mx-auto mb-3"
+                            style="width: 150px; height: 150px;">
+                            <img src="@Model.ProfileImageUrl" class="rounded-circle border img-fluid"
+                                style="width: 100%; height: 100%; object-fit: cover;"
+                                alt="@Model.Name Profile Picture" />
                             @if (User.Identity.Name == Model.UserName)
                             {
-                                <a asp-controller="Profile"
-                                   asp-action="Edit"
-                                   asp-route-userName="@Model.UserName"
-                                   class="btn btn-sm btn-outline-primary rounded-circle position-absolute top-0 end-0 shadow">
-                                    <i class="bi bi-pencil"></i>
-                                </a>
+                            <a asp-controller="Profile" asp-action="Edit" asp-route-userName="@Model.UserName"
+                                class="btn btn-sm btn-outline-primary rounded-circle position-absolute top-0 end-0 shadow">
+                                <i class="bi bi-pencil"></i>
+                            </a>
                             }
                         </div>
                         <h4 class="fw-bold text-dark mb-1">@Model.Name @Model.Surname</h4>
                         <p class="text-muted">@Model.UserName</p>
-                        <p class="text-muted">@Model.SubscribersCount subscribers</p>
+                        <form method="get" action="/Subscription/Index">
+                            <input type="hidden" name="username" value="@Model.UserName" />
+                            <button type="submit" class="btn btn-link p-0">
+                                <p class="text-muted">@Model.SubscribersCount subscribers</p>
+                            </button>
+                        </form>
                         @if (User.Identity.Name != Model.UserName)
                         {
-                            @if (Model.IsSubscribed)
-                            {
-                                <form asp-controller="Subscription" asp-action="Unsubscribe" method="post">
-                                    <input type="hidden" name="username" value="@Model.UserName" />
-                                    <button type="submit" class="btn btn-outline-danger">Abone Olundu</button>
-                                </form>
-                            }
-                            else
-                            {
-                                <form asp-controller="Subscription" asp-action="Subscribe" method="post">
-                                    <input type="hidden" name="username" value="@Model.UserName" />
-                                    <h1>@Model.UserName</h1>
-                                    <button type="submit" class="btn btn-outline-primary">Abone Ol</button>
-                                </form>
-                            }
+                        @if (Model.IsSubscribed)
+                        {
+                        <form asp-controller="Subscription" asp-action="Unsubscribe" method="post">
+                            <input type="hidden" name="username" value="@Model.UserName" />
+                            <button type="submit" class="btn btn-outline-danger">Abone Olundu</button>
+                        </form>
+                        }
+                        else
+                        {
+                        <form asp-controller="Subscription" asp-action="Subscribe" method="post">
+                            <input type="hidden" name="username" value="@Model.UserName" />
+                            <button type="submit" class="btn btn-outline-primary">Abone Ol</button>
+                        </form>
+                        }
                         }
                     </div>
                 </div>
@@ -57,43 +59,46 @@
                     <div class="card-body">
                         @if (Model.Posts != null && Model.Posts.Any())
                         {
-                            <div class="list-group">
-                                @foreach (var post in Model.Posts)
-                                {
-                                    <div class="list-group-item list-group-item-action mb-3 rounded shadow-sm p-3">
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <div>
-                                                <h5 class="fw-bold text-primary mb-1">@post.Title</h5>
-                                                <p class="text-muted small mb-0">@post.Description</p>
-                                                <p class="text-muted small mb-0">
-                                                    <i class="bi bi-chat-dots"></i> @post.Comments.Count() comments
-                                                    <i class="bi bi-heart ms-3"></i> @post.Favorites.Count() favorites
-                                                </p>
-                                            </div>
-                                            <div>
-                                                <a href="/Post/Details/@post.PostId" class="btn btn-outline-primary btn-sm rounded-pill">
-                                                    Read More
-                                                </a>
-                                                @if (User.Identity.Name == Model.UserName)
-                                                {
-                                                    <a href="/Post/Edit/@post.PostId" class="btn btn-outline-warning btn-sm rounded-pill">
-                                                        Edit
-                                                    </a>
-                                                    <a href="/Post/Delete/@post.PostId" class="btn btn-outline-danger btn-sm rounded-pill">
-                                                        Delete
-                                                    </a>
-                                                }
-                                            </div>
-                                        </div>
+                        <div class="list-group">
+                            @foreach (var post in Model.Posts)
+                            {
+                            <div class="list-group-item list-group-item-action mb-3 rounded shadow-sm p-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h5 class="fw-bold text-primary mb-1">@post.Title</h5>
+                                        <p class="text-muted small mb-0">@post.Description</p>
+                                        <p class="text-muted small mb-0">
+                                            <i class="bi bi-chat-dots"></i> @post.Comments.Count() comments
+                                            <i class="bi bi-heart ms-3"></i> @post.Favorites.Count() favorites
+                                        </p>
                                     </div>
-                                }
+                                    <div>
+                                        <a href="/Post/Details/@post.PostId"
+                                            class="btn btn-outline-primary btn-sm rounded-pill">
+                                            Read More
+                                        </a>
+                                        @if (User.Identity.Name == Model.UserName)
+                                        {
+                                        <a href="/Post/Edit/@post.PostId"
+                                            class="btn btn-outline-warning btn-sm rounded-pill">
+                                            Edit
+                                        </a>
+                                        <a href="/Post/Delete/@post.PostId"
+                                            class="btn btn-outline-danger btn-sm rounded-pill">
+                                            Delete
+                                        </a>
+                                        }
+                                    </div>
+                                </div>
                             </div>
+                            }
+                        </div>
                         }
                         else
                         {
-                            <div class="text-center py-3">
-                                <p class="text-muted">No posts available.</p>
-                            </div>
+                        <div class="text-center py-3">
+                            <p class="text-muted">No posts available.</p>
+                        </div>
                         }
                     </div>
                 </div>
@@ -106,35 +111,37 @@
                     <div class="card-body">
                         @if (Model.Comments != null && Model.Comments.Any())
                         {
-                            <div class="list-group">
-                                @foreach (var comment in Model.Comments)
-                                {
-                                    <div class="list-group-item list-group-item-action mb-3 rounded shadow-sm p-3">
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <div>
-                                                <h5 class="fw-bold text-primary mb-1">@comment.Post.Title</h5>
-                                                <p class="text-muted small mb-0">@comment.CommentText</p>
-                                            </div>
-                                            <a href="/Post/Details/@comment.Post?.PostId" class="btn btn-outline-primary btn-sm rounded-pill">
-                                                Read More
-                                            </a>
-                                            @if (User.Identity.Name == Model.UserName)
-                                            {
-
-                                                <a href="/Comments/Delete/@comment.CommentId" class="btn btn-outline-danger btn-sm rounded-pill">
-                                                    Delete
-                                                </a>
-                                            }
-                                        </div>
+                        <div class="list-group">
+                            @foreach (var comment in Model.Comments)
+                            {
+                            <div class="list-group-item list-group-item-action mb-3 rounded shadow-sm p-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h5 class="fw-bold text-primary mb-1">@comment.Post.Title</h5>
+                                        <p class="text-muted small mb-0">@comment.CommentText</p>
                                     </div>
-                                }
+                                    <a href="/Post/Details/@comment.Post?.PostId"
+                                        class="btn btn-outline-primary btn-sm rounded-pill">
+                                        Read More
+                                    </a>
+                                    @if (User.Identity.Name == Model.UserName)
+                                    {
+
+                                    <a href="/Comments/Delete/@comment.CommentId"
+                                        class="btn btn-outline-danger btn-sm rounded-pill">
+                                        Delete
+                                    </a>
+                                    }
+                                </div>
                             </div>
+                            }
+                        </div>
                         }
                         else
                         {
-                            <div class="text-center py-3">
-                                <p class="text-muted">No comments available.</p>
-                            </div>
+                        <div class="text-center py-3">
+                            <p class="text-muted">No comments available.</p>
+                        </div>
                         }
                     </div>
                 </div>
@@ -146,26 +153,26 @@
                     <div class="card-body">
                         @if (Model.Favorites != null && Model.Favorites.Any())
                         {
-                            <div class="list-group">
-                                @foreach (var favorite in Model.Favorites)
-                                {
-                                    <a href="/Post/Details/@favorite.PostId" class="list-group-item list-group-item-action">
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <div>
-                                                <h5 class="fw-bold text-primary mb-1">@favorite.Post.Title</h5>
-                                                <p class="text-muted small mb-0">@favorite.Post.Description</p>
-                                                <p class="text-muted small mb-0">@favorite.Post.Writer.UserName</p>
-                                            </div>
-                                        </div>
-                                    </a>
-                                }
-                            </div>
+                        <div class="list-group">
+                            @foreach (var favorite in Model.Favorites)
+                            {
+                            <a href="/Post/Details/@favorite.PostId" class="list-group-item list-group-item-action">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h5 class="fw-bold text-primary mb-1">@favorite.Post.Title</h5>
+                                        <p class="text-muted small mb-0">@favorite.Post.Description</p>
+                                        <p class="text-muted small mb-0">@favorite.Post.Writer.UserName</p>
+                                    </div>
+                                </div>
+                            </a>
+                            }
+                        </div>
                         }
                         else
                         {
-                            <div class="text-center py-3">
-                                <p class="text-muted">No favorites available.</p>
-                            </div>
+                        <div class="text-center py-3">
+                            <p class="text-muted">No favorites available.</p>
+                        </div>
                         }
                     </div>
                 </div>

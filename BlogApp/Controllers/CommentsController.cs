@@ -9,13 +9,16 @@ public class CommentsController : Controller
 {
     private readonly ICommentRepository _commentRepository;
 
-    public CommentsController(ICommentRepository commentRepository)
+    private readonly INotificationRepository _notificationRepository;
+
+    public CommentsController(ICommentRepository commentRepository, INotificationRepository notificationRepository)
     {
         _commentRepository = commentRepository;
+        _notificationRepository = notificationRepository;
     }
 
     [HttpPost]
-    public IActionResult Create(int postId, string CommentText)
+    public async Task<IActionResult> Create(int postId, string CommentText)
     {
 
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -39,6 +42,13 @@ public class CommentsController : Controller
 
         };
         _commentRepository.AddComment(comment);
+
+        var post = _commentRepository.GetPostByCommentId(comment.CommentId);
+        if (post != null)
+        {
+            // Bildirim oluştur
+            await _notificationRepository.CreateNotificationAsync(post.WriterId, userId, "commented on your post", postId);
+        }
         return RedirectToAction("Details", "Post", new { id = postId });
 
     }

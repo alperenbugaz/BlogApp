@@ -8,10 +8,14 @@
                 @foreach (var user in Model.Subscriptions)
                 {
                     <div class="list-group-item list-group-item-action d-flex align-items-center">
-                        <img src="@user.ProfileImageUrl ?? "/images/default-profile.png"" class="rounded-circle me-3" alt="Profile Image" style="width: 50px; height: 50px;">
+                        <a href="/Profile/@user.UserName">
+                            <img src="@user.ProfileImageUrl" class="rounded-circle me-3" alt="Profile Image" style="width: 50px; height: 50px;">
+                        </a>
                         <div>
-                            <h5 class="mb-0">@user.Name @user.Surname</h5>
-                            <small class="text-muted">@user.UserName</small>
+                            <a href="/Profile/@user.UserName" class="text-decoration-none">
+                                <h5 class="mb-0">@user.Name @user.Surname</h5>
+                                <small class="text-muted">@user.UserName</small>
+                            </a>
                         </div>
                     </div>
                 }
@@ -21,12 +25,16 @@
             <h4 class="mb-3">Subscribers</h4>
             <div class="list-group">
                 @foreach (var user in Model.Subscribers)
-                {
+                {   
                     <div class="list-group-item list-group-item-action d-flex align-items-center">
-                        <img src="@user.ProfileImageUrl ?? "/images/default-profile.png"" class="rounded-circle me-3" alt="Profile Image" style="width: 50px; height: 50px;">
+                        <a href="/Profile/@user.UserName">
+                            <img src="@user.ProfileImageUrl" class="rounded-circle me-3" alt="Profile Image" style="width: 50px; height: 50px;">
+                        </a>
                         <div>
-                            <h5 class="mb-0">@user.Name @user.Surname</h5>
-                            <small class="text-muted">@user.UserName</small>
+                            <a href="/Profile/@user.UserName" class="text-decoration-none">
+                                <h5 class="mb-0">@user.Name @user.Surname</h5>
+                                <small class="text-muted">@user.UserName</small>
+                            </a>
                         </div>
                     </div>
                 }

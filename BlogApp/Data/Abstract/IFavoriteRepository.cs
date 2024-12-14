@@ -4,7 +4,7 @@ namespace BlogApp.Data.Abstract
 {
     public interface IFavoriteRepository
     {   
-        Task<Favorite> GetPostById(int id);
+        Post? GetPostByFavoriteId(int id);
         void AddFavorite(Favorite favorite);
         Task<Favorite?> GetFavoriteAsync(string userId, int postId);
 

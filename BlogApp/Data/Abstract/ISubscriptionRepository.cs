@@ -8,6 +8,8 @@ namespace BlogApp.Data.Abstract
         void DeleteSubscription(int id);
         List<Subscription> GetSubscriptionsByUserId(string id);
 
+        List<Subscription> GetSubscribersByUserId(string id);
+
         public bool IsSubscribed(string subscriberId, string subscribedToId);
     }
 }

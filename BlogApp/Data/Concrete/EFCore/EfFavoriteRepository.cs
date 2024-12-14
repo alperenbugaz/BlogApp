@@ -34,9 +34,10 @@ namespace BlogApp.Data.Abstract
             }
         }
 
-        public async Task<Favorite> GetPostById(int id)
-        {
-            return await _context.Favorites.FindAsync(id);
+        public Post GetPostByFavoriteId(int id)
+        {   
+            var favorite = _context.Favorites.Include(f => f.Post).FirstOrDefault(f => f.FavoriteId == id);
+            return favorite?.Post;
         }
     }
 }

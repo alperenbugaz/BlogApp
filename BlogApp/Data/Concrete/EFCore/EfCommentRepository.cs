@@ -48,7 +48,11 @@ namespace BlogApp.Data.Abstract
             _context.SaveChanges();
 
         }
-
+        public Post GetPostByCommentId(int commentId)
+        {
+            var comment = _context.Comments.Include(c => c.Post).FirstOrDefault(c => c.CommentId == commentId);
+            return comment?.Post;
+        }
 
     }
 }

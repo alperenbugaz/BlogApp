@@ -1,0 +1,56 @@
+@model IEnumerable<BlogApp.Data.Entity.Notification>
+
+    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle position-relative" href="#" id="notificationDropdown"
+            role="button" data-bs-toggle="dropdown" aria-expanded="false"
+            style="display: inline-flex; align-items: center; justify-content: center; font-size: 1.25rem; text-decoration: none; color: #333;">
+            <!-- Bildirim İkonu -->
+            <i class="bi bi-bell" style="margin-right: 8px;"></i>
+
+            <!-- Bildirim Sayısı -->
+            <span id="notificationCount" style="
+                        display: inline-block; 
+                        background-color: #dc3545; 
+                        color: #fff; 
+                        font-size: 0.75rem; 
+                        font-weight: bold; 
+                        padding: 2px 6px; 
+                        border-radius: 12px; 
+                        line-height: 1;
+                    ">
+                @Model.Count()
+            </span>
+
+        </a>
+
+        <ul class="dropdown-menu p-3" aria-labelledby="notificationDropdown" style="width: 300px;">
+            @foreach (var notification in Model)
+            {
+                <li class="dropdown-item d-flex justify-content-between align-items-center border-bottom py-2">
+                    <!-- Sol Taraf: Kullanıcı ve Bildirim -->
+                    <div>
+                        <strong>
+                            <a href="/profile/@notification.Actor.UserName" class="text-dark text-decoration-none">
+                                @notification.Actor.UserName
+                            </a>
+                        </strong> 
+                        <br />
+                        <small>
+                            <a href="/post/details/@notification.PostId" class="text-muted text-decoration-none">
+                                @notification.NotificationType
+                            </a>
+                        </small>
+                    </div>
+        
+                    <!-- Sağ Taraf: Okundu Olarak İşaretle -->
+                    <form asp-controller="Notifications" asp-action="MarkAsRead" method="post" style="display:inline;">
+                        <input type="hidden" name="id" value="@notification.Id" />
+                        <button type="submit" class="btn btn-sm btn-light rounded-circle p-0" title="Mark as read" style="width: 30px; height: 30px;">
+                            <i class="bi bi-x text-danger"></i>
+                        </button>
+                    </form>
+                </li>
+            }
+        </ul>
+        
+    </li>

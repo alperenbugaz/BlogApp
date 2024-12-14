@@ -18,6 +18,8 @@ namespace IdentityApp.Data.Concrete.EFCore
         public DbSet<Favorite> Favorites { get; set; }
 
         public DbSet<Subscription> Subscriptions { get; set; }
+
+        public DbSet<Notification> Notifications { get; set; }
           protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -61,6 +63,27 @@ namespace IdentityApp.Data.Concrete.EFCore
                 .WithMany(u => u.Subscribers)
                 .HasForeignKey(s => s.SubscribedToId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+                        // Notification - User
+        modelBuilder.Entity<Notification>()
+            .HasOne(n => n.User)
+            .WithMany(u => u.Notifications)
+            .HasForeignKey(n => n.UserId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        // Notification - Actor
+        modelBuilder.Entity<Notification>()
+            .HasOne(n => n.Actor)
+            .WithMany()
+            .HasForeignKey(n => n.ActorId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        // Notification - Post
+        modelBuilder.Entity<Notification>()
+            .HasOne(n => n.Post)
+            .WithMany()
+            .HasForeignKey(n => n.PostId)
+            .OnDelete(DeleteBehavior.SetNull);
 
         }
         

@@ -16,30 +16,33 @@ namespace BlogApp.Controllers
         private readonly UserManager<BlogAppUser> _userManager;
         private readonly ISubscriptionRepository _subscriptionRepository;
 
-        public SubscriptionController(UserManager<BlogAppUser> userManager , ISubscriptionRepository subscriptionRepository)
+        public SubscriptionController(UserManager<BlogAppUser> userManager, ISubscriptionRepository subscriptionRepository)
         {
             _userManager = userManager;
             _subscriptionRepository = subscriptionRepository;
 
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string username)
         {
-            var user = await _userManager.GetUserAsync(User);
+            var user = await _userManager.FindByNameAsync(username);
 
-            var model = new SubscriptionViewModel
+            if (user == null)
             {
-                Subscriptions = _subscriptionRepository.GetSubscriptionsByUserId(user.Id)
-                    .Where(s => s.SubscriberId == user.Id)
-                    .Select(s => s.SubscribedTo)
-                    .ToList(),
-                Subscribers = _subscriptionRepository.GetSubscriptionsByUserId(user.Id)
-                    .Where(s => s.SubscribedToId == user.Id)
-                    .Select(s => s.Subscriber)
-                    .ToList()
+                return NotFound();
+            }
+
+            var subscriptions = _subscriptionRepository.GetSubscriptionsByUserId(user.Id);
+            var subscribers = _subscriptionRepository.GetSubscribersByUserId(user.Id);
+
+            var viewModel = new SubscriptionViewModel
+            {
+                Subscriptions = subscriptions.Select(s => s.SubscribedTo).ToList(),
+                Subscribers = subscribers.Select(s => s.Subscriber).ToList()
             };
 
-            return View(model);
+            return View(viewModel);
+
         }
 
         public async Task<IActionResult> Subscribe(string username)
@@ -60,13 +63,13 @@ namespace BlogApp.Controllers
 
             _subscriptionRepository.AddSubscription(subscription);
 
-            return RedirectToAction("Index", "Home");
+            return Redirect(Request.Headers["Referer"].ToString());
         }
 
-        public async Task<IActionResult> Unsubscribe(string id)
+        public async Task<IActionResult> Unsubscribe(string username)
         {
             var user = await _userManager.GetUserAsync(User);
-            var subscribedTo = await _userManager.FindByIdAsync(id);
+            var subscribedTo = await _userManager.FindByNameAsync(username);
 
             if (user == null || subscribedTo == null)
             {
@@ -82,7 +85,8 @@ namespace BlogApp.Controllers
                 _subscriptionRepository.DeleteSubscription(subscription.Id);
             }
 
-            return RedirectToAction("Index", "Home");
+            return Redirect(Request.Headers["Referer"].ToString());
+
         }
 
 

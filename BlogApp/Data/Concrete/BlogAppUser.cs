@@ -20,6 +20,7 @@ namespace BlogApp.Data.Concrete
 
         public List<Subscription>? Subscribers { get; set; }
 
+        public List<Notification>? Notifications { get; set; }
         
     }
 

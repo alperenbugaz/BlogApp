@@ -9,5 +9,8 @@ namespace BlogApp.Data.Abstract
         void AddComment(Comment comment);
         void UpdateComment(Comment comment);
         void DeleteComment(int id);
+
+        Post GetPostByCommentId(int commentId); // Yeni metod
+
     }
 }

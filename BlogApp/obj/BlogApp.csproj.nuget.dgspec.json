@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "e:\\github\\BlogApp\\BlogApp\\BlogApp.csproj": {}
+    "E:\\github\\BlogApp\\BlogApp\\BlogApp.csproj": {}
   },
   "projects": {
-    "e:\\github\\BlogApp\\BlogApp\\BlogApp.csproj": {
+    "E:\\github\\BlogApp\\BlogApp\\BlogApp.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "e:\\github\\BlogApp\\BlogApp\\BlogApp.csproj",
+        "projectUniqueName": "E:\\github\\BlogApp\\BlogApp\\BlogApp.csproj",
         "projectName": "BlogApp",
-        "projectPath": "e:\\github\\BlogApp\\BlogApp\\BlogApp.csproj",
+        "projectPath": "E:\\github\\BlogApp\\BlogApp\\BlogApp.csproj",
         "packagesPath": "C:\\Users\\Alperen Buğaz\\.nuget\\packages\\",
-        "outputPath": "e:\\github\\BlogApp\\BlogApp\\obj\\",
+        "outputPath": "E:\\github\\BlogApp\\BlogApp\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Alperen Buğaz\\AppData\\Roaming\\NuGet\\NuGet.Config",
