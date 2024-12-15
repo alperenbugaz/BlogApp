@@ -7,7 +7,7 @@ namespace BlogApp.Data.Abstract
         Task CreateNotificationAsync(string userId, string actorId, string notificationType, int? postId = null);
 
         List<Notification> GetNotificationsByUserId(string id);
-        List<Notification> GetUnreadNotificationsByUserId(string id);
+        Task<List<Notification>> GetUnreadNotificationsByUserIdAsync(string id);
         void MarkAsRead(int id);
     }
 }

@@ -120,19 +120,21 @@
                                         <h5 class="fw-bold text-primary mb-1">@comment.Post.Title</h5>
                                         <p class="text-muted small mb-0">@comment.CommentText</p>
                                     </div>
-                                    <a href="/Post/Details/@comment.Post?.PostId"
-                                        class="btn btn-outline-primary btn-sm rounded-pill">
-                                        Read More
-                                    </a>
-                                    @if (User.Identity.Name == Model.UserName)
-                                    {
-
-                                    <a href="/Comments/Delete/@comment.CommentId"
-                                        class="btn btn-outline-danger btn-sm rounded-pill">
-                                        Delete
-                                    </a>
-                                    }
+                                    <div class="d-flex gap-2">
+                                        <a href="/Post/Details/@comment.Post?.PostId"
+                                            class="btn btn-outline-primary btn-sm rounded-pill">
+                                            Read More
+                                        </a>
+                                        @if (User.Identity.Name == Model.UserName)
+                                        {
+                                        <a href="/Comments/Delete/@comment.CommentId"
+                                            class="btn btn-outline-danger btn-sm rounded-pill">
+                                            Delete
+                                        </a>
+                                        }
+                                    </div>
                                 </div>
+                                
                             </div>
                             }
                         </div>

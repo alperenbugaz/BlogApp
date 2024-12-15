@@ -63,6 +63,7 @@ public class PostController : Controller
     }
 
     [Authorize]
+    [HttpGet]
     public IActionResult Create()
     {
         return View();

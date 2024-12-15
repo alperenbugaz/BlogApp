@@ -22,7 +22,7 @@ namespace BlogApp.ViewModels
 
         public List<BlogAppUser>? PostWriter { get; set; }
 
-        public int SubscribersCount { get; set; }
-        public bool IsSubscribed { get; set; }
+        public int? SubscribersCount { get; set; }
+        public bool IsSubscribed { get; set; } = false;
     }
 }

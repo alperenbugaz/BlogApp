@@ -1,6 +1,7 @@
 using BlogApp.Data.Abstract;
 using BlogApp.Data.Entity;
 using IdentityApp.Data.Concrete.EFCore;
+using Microsoft.EntityFrameworkCore;
 
 namespace BlogApp.Data.Concrete;
 
@@ -33,9 +34,11 @@ public class EfNotificationRepository : INotificationRepository
         return _context.Notifications.Where(n => n.UserId == id).ToList();
     }
 
-    public List<Notification> GetUnreadNotificationsByUserId(string id)
+    public async Task<List<Notification>>GetUnreadNotificationsByUserIdAsync(string id)
     {
-        return _context.Notifications.Where(n => n.UserId == id && !n.IsRead).ToList();
+        return await _context.Notifications
+        .Include(n => n.Actor)
+        .Where(n => n.UserId == id && !n.IsRead).ToListAsync();
     }
 
     public void MarkAsRead(int id)
@@ -47,4 +50,6 @@ public class EfNotificationRepository : INotificationRepository
             _context.SaveChanges();
         }
     }
+
+
 }

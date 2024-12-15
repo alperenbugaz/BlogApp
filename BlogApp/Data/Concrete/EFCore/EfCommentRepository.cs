@@ -30,16 +30,6 @@ namespace BlogApp.Data.Abstract
             }
         }
 
-        public IQueryable<Post> GetAllComments()
-        {
-            throw new NotImplementedException();
-
-        }
-
-        public Task<Post> GetCommentsById(int id)
-        {
-            throw new NotImplementedException();
-        }
 
         public void UpdateComment(Comment comment)
         {

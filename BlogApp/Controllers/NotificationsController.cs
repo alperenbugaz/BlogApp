@@ -19,7 +19,7 @@ public class NotificationsController : Controller
     public async Task<IActionResult> Index()
     {
         var user = await _userManager.GetUserAsync(User);
-        var notifications = _notificationRepository.GetUnreadNotificationsByUserId(user.Id);
+        var notifications = await _notificationRepository.GetUnreadNotificationsByUserIdAsync(user.Id);
         return View(notifications);
     }
 

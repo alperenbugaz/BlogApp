@@ -57,10 +57,8 @@ public class CommentsController : Controller
     public IActionResult Delete(int id)
     {
         _commentRepository.DeleteComment(id);
+        return Redirect(Request.Headers["Referer"].ToString());
 
-        return RedirectToAction("Index", "Profile");
     }
-
-
 
 }

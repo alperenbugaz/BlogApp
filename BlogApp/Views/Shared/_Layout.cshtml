@@ -44,7 +44,7 @@
                     <ul class="navbar-nav">
                         @if (User.Identity.IsAuthenticated)
                         {
-                            @await Component.InvokeAsync("Notifications")
+                         @await Component.InvokeAsync("Notifications")
 
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Profile" asp-action="Index"

@@ -16,10 +16,13 @@ namespace BlogApp.Controllers
         private readonly UserManager<BlogAppUser> _userManager;
         private readonly ISubscriptionRepository _subscriptionRepository;
 
-        public SubscriptionController(UserManager<BlogAppUser> userManager, ISubscriptionRepository subscriptionRepository)
+        private readonly INotificationRepository _notificationRepository;
+
+        public SubscriptionController(UserManager<BlogAppUser> userManager, ISubscriptionRepository subscriptionRepository, INotificationRepository notificationRepository)
         {
             _userManager = userManager;
             _subscriptionRepository = subscriptionRepository;
+            _notificationRepository = notificationRepository;
 
         }
 
@@ -61,7 +64,12 @@ namespace BlogApp.Controllers
                 SubscribedToId = subscribedTo.Id
             };
 
+
             _subscriptionRepository.AddSubscription(subscription);
+
+
+            await _notificationRepository.CreateNotificationAsync(subscribedTo.Id, user.Id, "subscribed to you", null);
+
 
             return Redirect(Request.Headers["Referer"].ToString());
         }
