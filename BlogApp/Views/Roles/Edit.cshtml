@@ -1,5 +1,9 @@
 @model BlogAppRole
 
+@{
+    ViewData["Title"] = "Edit Role";
+}
+
 <form asp-action="Edit" method="post">
     <div asp-validation-summary="All" class="text-danger"></div>
     <input type="hidden" asp-for="Id" />
