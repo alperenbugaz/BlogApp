@@ -13,5 +13,9 @@ namespace BlogApp.ViewModels
         public IFormFile? Image { get; set; }
 
         public string? ImageUrl { get; set; }
+
+        public int? CategoryId { get; set; }
+
+        public string? Search { get; set; }
     }
 }

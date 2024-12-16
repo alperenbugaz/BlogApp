@@ -22,6 +22,10 @@ namespace BlogApp.ViewComponents
             {
                 var user = await _userManager.GetUserAsync(HttpContext.User);
                 var subscriptions = _subscriptionRepository.GetSubscriptionsByUserId(user.Id);
+                if (subscriptions == null)
+                {
+                    return View();
+                }
                 var subscribedUserIds = subscriptions.Select(s => s.SubscribedToId).ToList();
 
                 // Abone olunmayan kullanıcıları al

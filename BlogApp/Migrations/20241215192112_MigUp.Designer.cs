@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BlogApp.Migrations
 {
     [DbContext(typeof(BlogAppContext))]
-    [Migration("20241212215249_AddSubscriptions")]
-    partial class AddSubscriptions
+    [Migration("20241215192112_MigUp")]
+    partial class MigUp
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -121,6 +121,21 @@ namespace BlogApp.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("BlogApp.Data.Entity.Category", b =>
+                {
+                    b.Property<int>("CategoryId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.HasKey("CategoryId");
+
+                    b.ToTable("Categories");
+                });
+
             modelBuilder.Entity("BlogApp.Data.Entity.Comment", b =>
                 {
                     b.Property<int>("CommentId")
@@ -180,10 +195,48 @@ namespace BlogApp.Migrations
                     b.ToTable("Favorites");
                 });
 
+            modelBuilder.Entity("BlogApp.Data.Entity.Notification", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("ActorId")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("NotificationType")
+                        .HasColumnType("longtext");
+
+                    b.Property<int?>("PostId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Timestamp")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("varchar(255)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ActorId");
+
+                    b.HasIndex("PostId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Notifications");
+                });
+
             modelBuilder.Entity("BlogApp.Data.Entity.Post", b =>
                 {
                     b.Property<int>("PostId")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int?>("CategoryId")
                         .HasColumnType("int");
 
                     b.Property<string>("Content")
@@ -201,9 +254,6 @@ namespace BlogApp.Migrations
                     b.Property<bool>("IsPublished")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<int?>("TagId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Title")
                         .HasColumnType("longtext");
 
@@ -215,7 +265,7 @@ namespace BlogApp.Migrations
 
                     b.HasKey("PostId");
 
-                    b.HasIndex("TagId");
+                    b.HasIndex("CategoryId");
 
                     b.HasIndex("WriterId");
 
@@ -244,23 +294,6 @@ namespace BlogApp.Migrations
                     b.HasIndex("SubscriberId");
 
                     b.ToTable("Subscriptions");
-                });
-
-            modelBuilder.Entity("BlogApp.Data.Entity.Tag", b =>
-                {
-                    b.Property<int>("TagId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<string>("Text")
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Url")
-                        .HasColumnType("longtext");
-
-                    b.HasKey("TagId");
-
-                    b.ToTable("Tags");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -403,16 +436,43 @@ namespace BlogApp.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("BlogApp.Data.Entity.Notification", b =>
+                {
+                    b.HasOne("BlogApp.Data.Concrete.BlogAppUser", "Actor")
+                        .WithMany()
+                        .HasForeignKey("ActorId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("BlogApp.Data.Entity.Post", "Post")
+                        .WithMany()
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("BlogApp.Data.Concrete.BlogAppUser", "User")
+                        .WithMany("Notifications")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Actor");
+
+                    b.Navigation("Post");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("BlogApp.Data.Entity.Post", b =>
                 {
-                    b.HasOne("BlogApp.Data.Entity.Tag", null)
+                    b.HasOne("BlogApp.Data.Entity.Category", "Category")
                         .WithMany("Posts")
-                        .HasForeignKey("TagId");
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("BlogApp.Data.Concrete.BlogAppUser", "Writer")
                         .WithMany("Posts")
                         .HasForeignKey("WriterId")
                         .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Category");
 
                     b.Navigation("Writer");
                 });
@@ -491,6 +551,8 @@ namespace BlogApp.Migrations
 
                     b.Navigation("Favorites");
 
+                    b.Navigation("Notifications");
+
                     b.Navigation("Posts");
 
                     b.Navigation("Subscribers");
@@ -498,16 +560,16 @@ namespace BlogApp.Migrations
                     b.Navigation("Subscriptions");
                 });
 
+            modelBuilder.Entity("BlogApp.Data.Entity.Category", b =>
+                {
+                    b.Navigation("Posts");
+                });
+
             modelBuilder.Entity("BlogApp.Data.Entity.Post", b =>
                 {
                     b.Navigation("Comments");
 
                     b.Navigation("Favorites");
-                });
-
-            modelBuilder.Entity("BlogApp.Data.Entity.Tag", b =>
-                {
-                    b.Navigation("Posts");
                 });
 #pragma warning restore 612, 618
         }

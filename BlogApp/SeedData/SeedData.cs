@@ -75,19 +75,32 @@ namespace BlogApp.SeedData
                         await userManager.AddToRoleAsync(normalUser2, "User");
                     }
 
+                    var normalUser3 = new BlogAppUser
+                    {
+                        UserName = "ferhat",
+                        Name = "Ferhat",
+                        Surname = "Topcuoğlu",
+                        ProfileImageUrl = "/images/ferhat.jpeg",
+                    };
+
+                    result = await userManager.CreateAsync(normalUser3, "123456");
+                    if (result.Succeeded)
+                    {
+                        await userManager.AddToRoleAsync(normalUser3, "User");
+                    }
 
 
                 }
             
                 if(!context.Posts.Any())
                 {
-                    var adminUser = await userManager.FindByNameAsync(adminUserName);
+                    var normalUser2 = await userManager.FindByNameAsync("alperenbugaz");
                     var post = new Post
                     {
                         Title = "First Post",
                         Content = "Test Content",
                         Description = "Test Description",
-                        Writer = adminUser,
+                        Writer = normalUser2,
                         IsPublished = true,                        
                         CreatedAt = DateTime.Now,
                         ImageUrl = "/images/i3p4tnka.dqx.png",

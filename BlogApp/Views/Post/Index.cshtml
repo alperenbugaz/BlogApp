@@ -23,7 +23,12 @@ else
 
 <div class="container mt-4">
 
-    
+    <form asp-action="Index" method="get" class="mb-4">
+        <div class="input-group">
+            <input type="text" name="search" class="form-control" placeholder="Search by title" value="@ViewData["CurrentFilter"]" />
+            <button class="btn btn-primary" type="submit">Search</button>
+        </div>
+    </form>
     <div class="row">
         <!-- Ana Postlar -->
         <div class="col-lg-8">
@@ -48,7 +53,7 @@ else
                                     </h5>
                                     <p class="card-text text-muted">@post.Description</p>
                                     <p class="mt-2">
-                                        <a href="#" class="badge bg-danger bg-opacity-10 text-danger fw-bold">Web</a>
+                                        <a asp-action="Index" asp-route-category="@post.Category?.Name" class="badge bg-danger bg-opacity-10 text-danger fw-bold">@post.Category?.Name</a>
                                     </p>
                                 </div>
                             </div>
@@ -61,12 +66,17 @@ else
 
         <!-- Yan Menü -->
         <div class="col-lg-4">
+            <div class="bg-white p-4 rounded shadow-sm">
+                @await Component.InvokeAsync("CategoryFilter")
+            </div>
             <div class="bg-white p-4 rounded shadow-sm mb-4">
                 @await Component.InvokeAsync("NewPosts")
             </div>
             <div class="bg-white p-4 rounded shadow-sm mb-4">
                 @await Component.InvokeAsync("RecommendedWriters")
             </div>
+
+
 
         </div>
     </div>

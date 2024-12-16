@@ -16,16 +16,9 @@ public class NotificationsController : Controller
         _userManager = userManager;
     }
 
-    public async Task<IActionResult> Index()
-    {
-        var user = await _userManager.GetUserAsync(User);
-        var notifications = await _notificationRepository.GetUnreadNotificationsByUserIdAsync(user.Id);
-        return View(notifications);
-    }
 
     public async Task<IActionResult> MarkAsRead(int id)
     {
-
         _notificationRepository.MarkAsRead(id);
         return Redirect(Request.Headers["Referer"].ToString());
     }

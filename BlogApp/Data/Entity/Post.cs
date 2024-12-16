@@ -23,6 +23,9 @@ namespace BlogApp.Data.Entity
 
         public List<Favorite>? Favorites { get; set; }
 
+        public int? CategoryId { get; set; }  // Foreign Key
+        public Category? Category { get; set; }
+
         
     }
 }

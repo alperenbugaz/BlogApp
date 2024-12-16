@@ -1,0 +1,20 @@
+@model List<BlogApp.Data.Entity.Category>
+
+    <div class="card mb-3">
+        <div class="card-header">
+            <h5 class="cart-title">Categories</h5>
+        </div>
+        <div class="card-body">
+            <ul class="list-inline d-flex flex-wrap gap-2">
+                <li class="list-inline-item">
+                    <a asp-controller="Post" asp-action="Index" class="btn btn-outline-secondary btn-sm">All</a>
+                @foreach (var tag in Model)
+                {
+    
+                    <li class="list-inline-item">
+                        <a asp-controller="Post" asp-action="Index" asp-route-category="@tag.Name" class="btn btn-outline-secondary btn-sm">@tag.Name</a>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>

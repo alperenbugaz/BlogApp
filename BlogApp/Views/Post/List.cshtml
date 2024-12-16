@@ -14,6 +14,8 @@
                         <th scope="col">Id</th>
                         <th scope="col">Title</th>
                         <th scope="col">Writer</th>
+                        <th scope="col">Category</th>
+
                         <th scope="col">Description</th>
                         <th scope="col" class="text-center">Actions</th>
                     </tr>
@@ -33,6 +35,7 @@
                                 <td>@post.PostId</td>
                                 <td>@post.Title</td>
                                 <td>@post.Writer?.Name @post.Writer?.Surname</td>
+                                <td>@post.Category?.Name</td>
                                 <td>@post.Description</td>
                                 <td class="text-center">
                                     <a class="btn btn-warning btn-sm" asp-controller="Post" asp-action="Edit" asp-route-id="@post.PostId">

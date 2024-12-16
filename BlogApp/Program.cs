@@ -19,6 +19,7 @@ builder.Services.AddScoped<ICommentRepository,EfCommentRepository>();
 builder.Services.AddScoped<IFavoriteRepository,EfFavoriteRepository>();
 builder.Services.AddScoped<ISubscriptionRepository,EfSubscriptionRepository>();
 builder.Services.AddScoped<INotificationRepository,EfNotificationRepository>();
+builder.Services.AddScoped<ICategoryRepository,EfCategoryRepository>();
 builder.Services.AddIdentity<BlogAppUser, BlogAppRole>()
     .AddEntityFrameworkStores<BlogAppContext>().AddDefaultTokenProviders();
 builder.Services.Configure<IdentityOptions>(options =>

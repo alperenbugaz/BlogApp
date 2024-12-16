@@ -5,14 +5,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IdentityApp.Data.Concrete.EFCore
 {
-    public class BlogAppContext : IdentityDbContext<BlogAppUser,BlogAppRole,string>
+    public class BlogAppContext : IdentityDbContext<BlogAppUser, BlogAppRole, string>
     {
         public BlogAppContext(DbContextOptions<BlogAppContext> options) : base(options)
         {
-            
+
         }
         public DbSet<Post> Posts { get; set; }
-        public DbSet<Tag> Tags { get; set; }
         public DbSet<Comment> Comments { get; set; }
 
         public DbSet<Favorite> Favorites { get; set; }
@@ -20,7 +19,10 @@ namespace IdentityApp.Data.Concrete.EFCore
         public DbSet<Subscription> Subscriptions { get; set; }
 
         public DbSet<Notification> Notifications { get; set; }
-          protected override void OnModelCreating(ModelBuilder modelBuilder)
+
+        public DbSet<Category> Categories { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
             // Post - Tag
@@ -52,7 +54,7 @@ namespace IdentityApp.Data.Concrete.EFCore
                 .HasForeignKey(f => f.PostId);
 
             // Subscription - Subscriber
-                        modelBuilder.Entity<Subscription>()
+            modelBuilder.Entity<Subscription>()
                 .HasOne(s => s.Subscriber)
                 .WithMany(u => u.Subscriptions)
                 .HasForeignKey(s => s.SubscriberId)
@@ -64,28 +66,38 @@ namespace IdentityApp.Data.Concrete.EFCore
                 .HasForeignKey(s => s.SubscribedToId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-                        // Notification - User
-        modelBuilder.Entity<Notification>()
-            .HasOne(n => n.User)
-            .WithMany(u => u.Notifications)
-            .HasForeignKey(n => n.UserId)
-            .OnDelete(DeleteBehavior.Restrict);
+            // Notification - User
+            modelBuilder.Entity<Notification>()
+                .HasOne(n => n.User)
+                .WithMany(u => u.Notifications)
+                .HasForeignKey(n => n.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
 
-        // Notification - Actor
-        modelBuilder.Entity<Notification>()
-            .HasOne(n => n.Actor)
-            .WithMany()
-            .HasForeignKey(n => n.ActorId)
-            .OnDelete(DeleteBehavior.Restrict);
+            // Notification - Actor
+            modelBuilder.Entity<Notification>()
+                .HasOne(n => n.Actor)
+                .WithMany()
+                .HasForeignKey(n => n.ActorId)
+                .OnDelete(DeleteBehavior.Restrict);
 
-        // Notification - Post
-        modelBuilder.Entity<Notification>()
-            .HasOne(n => n.Post)
-            .WithMany()
-            .HasForeignKey(n => n.PostId)
-            .OnDelete(DeleteBehavior.SetNull);
+            // Notification - Post
+            modelBuilder.Entity<Notification>()
+                .HasOne(n => n.Post)
+                .WithMany()
+                .HasForeignKey(n => n.PostId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            //category - post
+            modelBuilder.Entity<Post>()
+                .HasOne(p => p.Category)
+                .WithMany(c => c.Posts)
+                .HasForeignKey(p => p.CategoryId)
+                .OnDelete(DeleteBehavior.SetNull);
+
 
         }
-        
+
+
+
     }
-}   
+}

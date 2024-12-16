@@ -8,6 +8,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using BlogApp.Data.Concrete;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 
 namespace BlogApp.Controllers;
@@ -18,18 +19,22 @@ public class PostController : Controller
 
     private readonly UserManager<BlogAppUser> _userManager;
 
-    public PostController(IPostRepository postRepository,UserManager<BlogAppUser> userManager)
+    private readonly ICategoryRepository _categoryRepository;
+
+    public PostController(IPostRepository postRepository, UserManager<BlogAppUser> userManager, ICategoryRepository categoryRepository)
     {
         _postRepository = postRepository;
         _userManager = userManager;
+        _categoryRepository = categoryRepository;
     }
 
 
-    [Authorize (Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> List()
     {
         var posts = await _postRepository.GetAllPosts().Where(p => p.IsPublished)
             .Include(p => p.Writer) // Yazar bilgilerini dahil et
+            .Include(p => p.Category) // Kategori bilgilerini dahil et
             .ToListAsync();
         return View(posts);
     }
@@ -48,15 +53,28 @@ public class PostController : Controller
 
         return View(post);
     }
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index(string? category, string? search)
     {
-        var posts = await _postRepository.GetAllPosts().Where(p => p.IsPublished)
-            .Include(p => p.Writer) // Yazar bilgilerini dahil et
+        var posts = await _postRepository.GetAllPosts()
+            .Where(p => p.IsPublished)
+            .Include(p => p.Writer)
+            .Include(p => p.Category)
             .ToListAsync();
+
+        if (!string.IsNullOrEmpty(category))
+        {
+            posts = posts.Where(p => p.Category.Name == category).ToList();
+        }
+
+        if (!string.IsNullOrEmpty(search))
+        {
+            posts = posts.Where(p => p.Title.Contains(search) || p.Content.Contains(search)).ToList();
+        }
 
         var model = new PostViewModel
         {
-            Posts = posts
+            Posts = posts,
+            Search = search
         };
 
         return View(model);
@@ -66,6 +84,7 @@ public class PostController : Controller
     [HttpGet]
     public IActionResult Create()
     {
+        ViewBag.Categories = new SelectList(_categoryRepository.GetAllCategories(), "CategoryId", "Name");
         return View();
     }
 
@@ -96,9 +115,11 @@ public class PostController : Controller
                 UpdatedAt = DateTime.Now,
                 IsPublished = true,
                 ImageUrl = imageUrl,
-                WriterId = User.FindFirstValue(ClaimTypes.NameIdentifier) // Yazarın ID'sini al
+                WriterId = User.FindFirstValue(ClaimTypes.NameIdentifier),
+                CategoryId = model.CategoryId
             };
             _postRepository.AddPost(post);
+
             return RedirectToAction("Index");
         }
         return View(model);
@@ -134,48 +155,48 @@ public class PostController : Controller
         return View(model);
     }
 
-        [Authorize]
-        [HttpPost]
-        public async Task<IActionResult> Edit(PostViewModel model)
+    [Authorize]
+    [HttpPost]
+    public async Task<IActionResult> Edit(PostViewModel model)
+    {
+        if (ModelState.IsValid)
         {
-            if (ModelState.IsValid)
+            var post = await _postRepository.GetPostById(model.Id);
+            if (post == null)
             {
-                var post = await _postRepository.GetPostById(model.Id);
-                if (post == null)
-                {
-                    return NotFound();
-                }
-
-                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                var user = await _userManager.FindByIdAsync(userId);
-
-                if (user == null || (post.WriterId != userId && !await _userManager.IsInRoleAsync(user, "Admin")))
-                {
-                    return Forbid();
-                }
-
-                post.Title = model.Title;
-                post.Description = model.Description;
-                post.Content = model.Content;
-
-                if (model.Image != null)
-                {
-                    var fileName = Path.GetRandomFileName() + Path.GetExtension(model.Image.FileName);
-                    var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", fileName);
-                    using (var stream = new FileStream(path, FileMode.Create))
-                    {
-                        await model.Image.CopyToAsync(stream);
-                    }
-                    post.ImageUrl = "/images/" + fileName;
-                }
-
-                _postRepository.UpdatePost(post);
-
-                return RedirectToAction("Details", new { id = post.PostId });
+                return NotFound();
             }
 
-            return View(model);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var user = await _userManager.FindByIdAsync(userId);
+
+            if (user == null || (post.WriterId != userId && !await _userManager.IsInRoleAsync(user, "Admin")))
+            {
+                return Forbid();
+            }
+
+            post.Title = model.Title;
+            post.Description = model.Description;
+            post.Content = model.Content;
+
+            if (model.Image != null)
+            {
+                var fileName = Path.GetRandomFileName() + Path.GetExtension(model.Image.FileName);
+                var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images", fileName);
+                using (var stream = new FileStream(path, FileMode.Create))
+                {
+                    await model.Image.CopyToAsync(stream);
+                }
+                post.ImageUrl = "/images/" + fileName;
+            }
+
+            _postRepository.UpdatePost(post);
+
+            return RedirectToAction("Details", new { id = post.PostId });
         }
+
+        return View(model);
+    }
 
     [Authorize]
     [HttpGet]

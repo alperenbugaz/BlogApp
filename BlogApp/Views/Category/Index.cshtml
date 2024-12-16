@@ -1,0 +1,76 @@
+@model IEnumerable<BlogApp.Data.Entity.Category>
+
+    @{
+        ViewData["Title"] = "Categories";
+    }
+    
+    <div class="container mt-4">
+        <h2 class="text-primary mb-4">Categories</h2>
+    
+        <a class="btn btn-success mb-3" asp-action="Create">
+            <i class="fas fa-plus"></i> Create New Category
+        </a>
+    
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th scope="col">Id</th>
+                        <th scope="col">Name</th>
+                        <th scope="col" class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!Model.Any())
+                    {
+                        <tr>
+                            <td colspan="4" class="text-center text-muted">No data available.</td>
+                        </tr>
+                    }
+                    else
+                    {
+                        @foreach (var category in Model)
+                        {
+                            <tr>
+                                <td>@category.CategoryId</td>
+                                <td>@category.Name</td>
+                                <td class="text-center">
+
+                                    <form asp-action="Delete" asp-route-id="@category.CategoryId" method="post" class="d-inline" id="deleteForm-@category.CategoryId">
+                                        <button type="button" class="btn btn-danger btn-sm" onclick="confirmDelete('@category.CategoryId')">
+                                            <i class="fas fa-trash"></i> Delete
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    @section Scripts {
+        <!-- SweetAlert2 -->
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <!-- FontAwesome -->
+        <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+        <script>
+            
+            function confirmDelete(categoryId) {
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "This action cannot be undone!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        document.getElementById('deleteForm-' + categoryId).submit();
+                    }
+                })
+            }
+        </script>
+    }

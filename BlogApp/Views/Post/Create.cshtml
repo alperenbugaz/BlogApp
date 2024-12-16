@@ -25,6 +25,13 @@
         <textarea asp-for="Content" class="form-control" id="editor" placeholder="Write the content of the post"></textarea>
         <span asp-validation-for="Content" class="text-danger"></span>
     </div>
+    <div class="mb-3">
+        <label asp-for="CategoryId" class="form-label">Category</label>
+        <select asp-for="CategoryId" class="form-control" asp-items="ViewBag.Categories">
+            <option value="">Select a category</option>
+        </select>
+        <span asp-validation-for="CategoryId" class="text-danger"></span>
+    </div>
 
     <!-- Image Upload -->
     <div class="mb-3">
@@ -37,7 +44,11 @@
     <div class="mb-3">
         <input type="submit" value="Create" class="btn btn-primary" />
     </div>
+
+
 </form>
+
+
 
 @section Scripts {
     <!-- CKEditor Script -->
