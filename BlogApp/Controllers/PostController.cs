@@ -143,13 +143,14 @@ public class PostController : Controller
             return Forbid();
         }
 
+        ViewBag.Categories = new SelectList(_categoryRepository.GetAllCategories(), "CategoryId", "Name", post.CategoryId);
         var model = new PostViewModel
         {
             Id = post.PostId,
             Title = post.Title,
             Description = post.Description,
             Content = post.Content,
-            ImageUrl = post.ImageUrl
+            ImageUrl = post.ImageUrl,
         };
 
         return View(model);
@@ -178,6 +179,8 @@ public class PostController : Controller
             post.Title = model.Title;
             post.Description = model.Description;
             post.Content = model.Content;
+            post.UpdatedAt = DateTime.Now;
+            post.CategoryId = model.CategoryId;
 
             if (model.Image != null)
             {

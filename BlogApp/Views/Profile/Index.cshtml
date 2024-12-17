@@ -2,7 +2,7 @@
 
 
 @{
-    ViewData["Title"] = "Profile";
+    ViewData["Title"] = Model.UserName ;
 }
 
 <div class="container-fluid py-5" style="background: linear-gradient(to bottom, #f5f5f5, #ffffff);">
@@ -12,17 +12,13 @@
             <div class="col-lg-4">
                 <div class="card border-0 shadow-sm rounded-lg">
                     <div class="card-body text-center p-4">
-                        <div class="profile-image-container position-relative mx-auto mb-3"
-                            style="width: 150px; height: 150px;">
-                            <img src="@Model.ProfileImageUrl" class="rounded-circle border img-fluid"
-                                style="width: 100%; height: 100%; object-fit: cover;"
-                                alt="@Model.Name Profile Picture" />
+                        <div class="profile-image-container position-relative mx-auto mb-3" style="width: 150px; height: 150px;">
+                            <img src="@Model.ProfileImageUrl" class="rounded-circle border img-fluid" style="width: 100%; height: 100%; object-fit: cover;" alt="@Model.Name Profile Picture" />
                             @if (User.Identity.Name == Model.UserName)
                             {
-                            <a asp-controller="Profile" asp-action="Edit" asp-route-userName="@Model.UserName"
-                                class="btn btn-sm btn-outline-primary rounded-circle position-absolute top-0 end-0 shadow">
-                                <i class="bi bi-pencil"></i>
-                            </a>
+                                <a asp-controller="Profile" asp-action="Edit" asp-route-userName="@Model.UserName" class="btn btn-sm btn-outline-primary rounded-circle position-absolute top-0 end-0 shadow">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
                             }
                         </div>
                         <h4 class="fw-bold text-dark mb-1">@Model.Name @Model.Surname</h4>
@@ -30,25 +26,27 @@
                         <form method="get" action="/Subscription/Index">
                             <input type="hidden" name="username" value="@Model.UserName" />
                             <button type="submit" class="btn btn-link p-0">
-                                <p class="text-muted">@Model.SubscribersCount subscribers</p>
+                                <span class="badge bg-primary">
+                                    <i class="bi bi-people-fill"></i> @Model.SubscribersCount subscribers
+                                </span>
                             </button>
                         </form>
                         @if (User.Identity.Name != Model.UserName)
                         {
-                        @if (Model.IsSubscribed)
-                        {
-                        <form asp-controller="Subscription" asp-action="Unsubscribe" method="post">
-                            <input type="hidden" name="username" value="@Model.UserName" />
-                            <button type="submit" class="btn btn-outline-danger">Abone Olundu</button>
-                        </form>
-                        }
-                        else
-                        {
-                        <form asp-controller="Subscription" asp-action="Subscribe" method="post">
-                            <input type="hidden" name="username" value="@Model.UserName" />
-                            <button type="submit" class="btn btn-outline-primary">Abone Ol</button>
-                        </form>
-                        }
+                            @if (Model.IsSubscribed)
+                            {
+                                <form asp-controller="Subscription" asp-action="Unsubscribe" method="post">
+                                    <input type="hidden" name="username" value="@Model.UserName" />
+                                    <button type="submit" class="btn btn-outline-danger">Abone Olundu</button>
+                                </form>
+                            }
+                            else
+                            {
+                                <form asp-controller="Subscription" asp-action="Subscribe" method="post">
+                                    <input type="hidden" name="username" value="@Model.UserName" />
+                                    <button type="submit" class="btn btn-outline-primary">Abone Ol</button>
+                                </form>
+                            }
                         }
                     </div>
                 </div>

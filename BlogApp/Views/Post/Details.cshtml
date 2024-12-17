@@ -7,6 +7,10 @@
     var isFavorite = FavoriteRepository.GetFavoriteAsync(userId, Model.PostId).Result != null;
 }
 
+@{
+    ViewData["Title"] = Model.Title;
+}
+
 <div class="row">
     <div class="col-lg-8">
         <div class="bg-white shadow-sm rounded p-4 mb-4">

@@ -1,5 +1,9 @@
 @model BlogApp.ViewModels.PostViewModel
 
+@{
+    ViewData["Title"] = "Edit Post";
+}
+
 <h2>Edit Post</h2>
 <hr>
 <form asp-controller="Post" asp-action="Edit" method="post" enctype="multipart/form-data">
@@ -21,6 +25,14 @@
     </div>
     
     <div class="mb-3">
+        <label asp-for="CategoryId" class="form-label">Category</label>
+        <select asp-for="CategoryId" class="form-control" asp-items="ViewBag.Categories">
+            <option value="">Select a category</option>
+        </select>
+        <span asp-validation-for="CategoryId" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
         <label asp-for="Image" class="control-label"></label>
         <input asp-for="Image" class="form-control" type="file" />
         <span asp-validation-for="Image" class="text-danger"></span>
@@ -34,10 +46,14 @@
             </div>
         </div>
     }
+
+
+
     <div class="mb-3">
         <input type="submit" value="Save" class="btn btn-primary" />
     </div>
 </form>
+
 
 @section Scripts {
     <!-- CKEditor Script -->

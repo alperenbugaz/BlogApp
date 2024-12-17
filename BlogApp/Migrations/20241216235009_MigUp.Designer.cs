@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BlogApp.Migrations
 {
     [DbContext(typeof(BlogAppContext))]
-    [Migration("20241215192112_MigUp")]
+    [Migration("20241216235009_MigUp")]
     partial class MigUp
     {
         /// <inheritdoc />

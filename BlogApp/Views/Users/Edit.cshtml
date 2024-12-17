@@ -1,5 +1,9 @@
 @model BlogApp.ViewModels.EditUserViewModel
 
+@{
+    ViewData["Title"] = "Edit User";
+}
+
 <h2>Edit User</h2>
 <hr>
 <form asp-controller="Users" asp-action="Edit" method="post">

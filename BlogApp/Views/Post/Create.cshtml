@@ -1,5 +1,8 @@
 @model BlogApp.ViewModels.PostViewModel
 
+@{
+    ViewData["Title"] = "Create Post";
+}
 <h2>Create Post</h2>
 <hr>
 <form asp-controller="Post" asp-action="Create" method="post" enctype="multipart/form-data">

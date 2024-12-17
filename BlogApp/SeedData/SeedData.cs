@@ -26,6 +26,23 @@ namespace BlogApp.SeedData
                 var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<BlogAppRole>>();
                 var context = scope.ServiceProvider.GetRequiredService<BlogAppContext>();
 
+                if(!context.Categories.Any())
+                {
+                    context.Categories.AddRange(
+                        new Category { Name = "C#" },
+                        new Category { Name = "Java" },
+                        new Category { Name = "Python" },
+                        new Category { Name = "Javascript" },
+                        new Category { Name = "C++" },
+                        new Category { Name = "Ruby" },
+                        new Category { Name = "Go" },
+                        new Category { Name = "Swift" },
+                        new Category { Name = "Kotlin" },
+                        new Category { Name = "Rust" }
+                    );
+                    context.SaveChanges();
+                }
+
                 if (!context.Roles.Any())
                 {
                     await roleManager.CreateAsync(new BlogAppRole { Name = "Admin" });
@@ -104,11 +121,13 @@ namespace BlogApp.SeedData
                         IsPublished = true,                        
                         CreatedAt = DateTime.Now,
                         ImageUrl = "/images/i3p4tnka.dqx.png",
+                        CategoryId = 1
                     };
                     context.Posts.Add(post);
                     context.SaveChanges();
                 }
 
+                
                 
             }
         }

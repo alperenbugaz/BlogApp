@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace BlogApp.Controllers
 {
-    [Route("profile/{userName}")]
+    [Route("Profile")]
     public class ProfileController : Controller
     {
         private readonly UserManager<BlogAppUser> _userManager;
@@ -24,6 +24,7 @@ namespace BlogApp.Controllers
             _postRepository = postRepository;
             _signInManager = signInManager;
         }
+        [HttpGet("{userName}")]
 
         public async Task<IActionResult> Index(string userName)
         {
@@ -131,6 +132,42 @@ namespace BlogApp.Controllers
                 {
                     // Kullanıcıyı yeniden oturum açmaya zorla
                     await _signInManager.SignInAsync(user, isPersistent: false);
+                    return RedirectToAction("Index", new { userName = user.UserName });
+                }
+
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
+            }
+
+            return View(model);
+        }
+
+        [HttpGet("ChangePassword")]
+        public IActionResult ChangePassword()
+        {
+            return View();
+        } 
+
+        [HttpPost("ChangePassword")]
+        public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                var user = await _userManager.FindByIdAsync(userId);
+
+                if (user == null)
+                {
+                    return NotFound();
+                }
+
+                var result = await _userManager.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
+
+                if (result.Succeeded)
+                {
+                    await _signInManager.RefreshSignInAsync(user);
                     return RedirectToAction("Index", new { userName = user.UserName });
                 }
 
