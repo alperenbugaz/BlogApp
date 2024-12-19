@@ -212,7 +212,7 @@ public class PostController : Controller
         }
 
         _postRepository.DeletePost(id);
-        return RedirectToAction("List");
+        return Redirect(Request.Headers["Referer"].ToString());
     }
 
 
