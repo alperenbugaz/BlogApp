@@ -139,9 +139,11 @@ networks:
 ![Register](project_img/register.png)
 
 3. **Bloglar**
-![BlogDetay1](project_img/blog_details1.png)
+![Blog](project_img/blog.png)
 
 4. **Blog Detay**
+![BlogDetay1](project_img/blog_details1.png)
+
 ![BlogDetay2](project_img/blog_details2.png)
 
 
